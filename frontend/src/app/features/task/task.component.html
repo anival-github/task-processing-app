@@ -1,0 +1,38 @@
+<div class="task">
+  <div class="task-container">
+    <div class="header">
+      <img src="assets/rama_logo.svg" alt="Rama Logo" class="logo" />
+      <div class="divider"></div>
+      <span class="progress">Read aloud | Q1/3</span>
+    </div>
+
+    <div class="question-section">
+      <div class="question-container">
+        <h2 class="label">Question:</h2>
+        <p class="question-text">
+          Lorem ipsum dolor sit amet consectetur. Et sagittis morbi accumsan ultricies eu rhoncus. Ultrices rhoncus massa duis non id neque?
+        </p>
+      </div>
+    </div>
+
+    <div class="answer-section">
+      <div class="answer-container">
+        <h2 class="label">Answer:</h2>
+        <div class="input-container">
+          <textarea
+            [(ngModel)]="answer"
+            (input)="onAnswerChange($event)"
+            placeholder="Enter your answer"
+            [maxLength]="maxWords * 5"
+            class="answer-input"
+          ></textarea>
+          <span class="word-count">{{wordCount}}/{{maxWords}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <button class="submit-button" (click)="onSubmit()">Submit</button>
+    </div>
+  </div>
+</div> 

@@ -1,0 +1,123 @@
+/* You can add global styles to this file, and also import other style files */
+
+@use '@angular/material' as mat;
+@use './styles/theme' as theme;
+@use './styles/variables' as vars;
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+// Include theme styles for core and each component used in your app.
+@include mat.core();
+@include mat.all-component-themes(theme.$theme);
+
+// Reset and base styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: vars.$surface;
+  color: vars.$text-primary;
+}
+
+// Utility classes
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  
+  @media (max-width: vars.$breakpoint-sm) {
+    padding: 0 8px;
+  }
+}
+
+.mat-mdc-card {
+  margin: 16px 0;
+  border-radius: 8px !important;
+}
+
+// Form styles
+.form-field-full-width {
+  width: 100%;
+}
+
+// Table styles
+.mat-mdc-table {
+  background: vars.$background;
+  
+  .mat-mdc-header-cell {
+    font-weight: 500;
+    color: vars.$text-secondary;
+  }
+  
+  .mat-mdc-row:hover {
+    background: rgba(vars.$primary, 0.04);
+  }
+}
+
+// Animation classes
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+  
+  .mdc-text-field {
+    border-radius: 8px;
+    padding: 12px 16px;
+    border-color: #E0E1E5;
+  }
+
+  .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: white;
+  }
+
+  .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
+    color: #333;
+    font-size: 14px;
+    letter-spacing: 1.07%;
+    line-height: 1.43em;
+  }
+
+  .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input::placeholder {
+    color: #838598;
+  }
+}
+
+.section-label {
+  text-transform: uppercase;
+  font-size: 20px;
+  font-weight: 700;
+  color: #5061D0;
+  letter-spacing: 0.75%;
+  line-height: 1.6em;
+  margin-bottom: 20px;
+}
+
+.word-count {
+  font-size: 12px;
+  color: #5B5C6A;
+  letter-spacing: 1.67%;
+  line-height: 1.4em;
+}

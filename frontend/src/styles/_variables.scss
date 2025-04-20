@@ -1,0 +1,53 @@
+// Brand Colors from Figma
+$primary: #2196F3;
+$accent: #E91E63;
+$warn: #F44336;
+
+// Status Colors from Figma
+$status-pending-bg: #FFF3E0;
+$status-pending-text: #E65100;
+$status-processed-bg: #E8F5E9;
+$status-processed-text: #2E7D32;
+$status-failed-bg: #FFEBEE;
+$status-failed-text: #C62828;
+
+// Neutral Colors from Figma
+$background: #FFFFFF;
+$surface: #FAFAFA;
+$divider: rgba(0, 0, 0, 0.12);
+$text-primary: rgba(0, 0, 0, 0.87);
+$text-secondary: rgba(0, 0, 0, 0.54);
+$disabled: rgba(0, 0, 0, 0.38);
+
+// Elevation Colors from Figma
+$elevation-1: 0px 2px 4px rgba(0, 0, 0, 0.1);
+$elevation-2: 0px 4px 8px rgba(0, 0, 0, 0.1);
+$elevation-3: 0px 8px 16px rgba(0, 0, 0, 0.1);
+
+// Spacing from Figma
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+
+// Breakpoints from Figma
+$breakpoint-xs: 0;
+$breakpoint-sm: 600px;
+$breakpoint-md: 960px;
+$breakpoint-lg: 1280px;
+$breakpoint-xl: 1920px;
+
+// Typography from Figma
+$font-family: 'Roboto', sans-serif;
+$font-size-body: 14px;
+$font-size-subtitle: 16px;
+$font-size-title: 20px;
+$font-size-h6: 20px;
+$font-size-h5: 24px;
+$font-size-h4: 34px;
+
+// Border Radius from Figma
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 16px; 

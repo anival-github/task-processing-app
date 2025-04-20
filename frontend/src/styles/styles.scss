@@ -1,0 +1,44 @@
+@use '@angular/material' as mat;
+@use 'theme' as theme;
+@use 'variables' as vars;
+
+// Include theme styles for core and each component used in your app.
+@include mat.core();
+@include mat.all-component-themes(theme.$theme);
+
+// Global styles
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: vars.$font-family;
+  background-color: vars.$surface;
+}
+
+// Apply our custom variables globally
+:root {
+  // Colors
+  --primary: #{vars.$primary};
+  --accent: #{vars.$accent};
+  --warn: #{vars.$warn};
+  --surface: #{vars.$surface};
+  
+  // Typography
+  --font-family: #{vars.$font-family};
+  
+  // Spacing
+  --spacing-xs: #{vars.$spacing-xs};
+  --spacing-sm: #{vars.$spacing-sm};
+  --spacing-md: #{vars.$spacing-md};
+  --spacing-lg: #{vars.$spacing-lg};
+  --spacing-xl: #{vars.$spacing-xl};
+  
+  // Border radius
+  --border-radius-sm: #{vars.$border-radius-sm};
+  --border-radius-md: #{vars.$border-radius-md};
+  --border-radius-lg: #{vars.$border-radius-lg};
+  
+  // Elevation
+  --elevation-1: #{vars.$elevation-1};
+  --elevation-2: #{vars.$elevation-2};
+  --elevation-3: #{vars.$elevation-3};
+} 

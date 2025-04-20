@@ -1,0 +1,30 @@
+.task-submission-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.button-spinner {
+  margin-right: 8px;
+}
+
+.error-message {
+  margin-top: 16px;
+  text-align: center;
+}
