@@ -1,0 +1,61 @@
+<div class="dashboard-container">
+  <table class="task-table">
+    <thead>
+      <tr>
+        <th>Task ID</th>
+        <th>Answer</th>
+        <th>Status</th>
+        <th>Retries</th>
+        <th>
+          Error message
+          <button class="refresh-button">
+            <img src="assets/icons/refresh.svg" alt="Refresh" />
+            Refresh table
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Example Row 1: Processed -->
+      <tr>
+        <td>1234</td>
+        <td>Answer text</td>
+        <td>
+          <span class="badge badge-processed">
+            <img src="assets/icons/check-circle.svg" alt="" />
+            Processed
+          </span>
+        </td>
+        <td>2</td>
+        <td>-</td>
+      </tr>
+      <!-- Example Row 2: Failed -->
+      <tr>
+        <td>1235</td>
+        <td>Another answer</td>
+        <td>
+          <span class="badge badge-failed">
+            <img src="assets/icons/close-circle.svg" alt="" />
+            Failed
+          </span>
+        </td>
+        <td>2</td>
+        <td>Error message</td>
+      </tr>
+      <!-- Example Row 3: Pending -->
+      <tr>
+        <td>1236</td>
+        <td>Yet another answer</td>
+        <td>
+          <span class="badge badge-pending">
+            <img src="assets/icons/clock.svg" alt="" />
+            Pending
+          </span>
+        </td>
+        <td>0</td>
+        <td>-</td>
+      </tr>
+      <!-- Add more rows dynamically later -->
+    </tbody>
+  </table>
+</div>

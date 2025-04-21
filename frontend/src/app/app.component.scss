@@ -1,0 +1,68 @@
+:host {
+  display: block;
+  /* Ensure the component itself can take height */
+  height: 100%; 
+}
+
+.app-container {
+  padding-top: 20px; /* Match Figma top padding */
+  max-width: 1800px; /* Allow content to spread wide like Figma */
+  margin: 0 auto;
+  /* Ensure container can take height */
+  min-height: calc(100vh - 20px); /* Full viewport height minus top padding */
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  display: flex;
+  gap: 20px; /* Match Figma gap */
+  padding: 20px; /* Padding around main content */
+  align-items: stretch; /* Changed from flex-start to stretch */
+  justify-content: center; /* Center the main content area horizontally */
+  flex-grow: 1; /* Allow main content to grow vertically */
+}
+
+.left-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* From Figma node 2:1604 layout */
+  gap: 20px; /* Gap between header and task form (also from 2:1604) */
+  flex: 0 0 620px; /* Fixed width for the left column based on Figma */
+  background-color: #FBFAFD; /* fill_AVBYLK from Figma node 2:1604 */
+  border-radius: 8px; /* From Figma node 2:1604 */
+  padding: 20px 0 0; /* Padding from Figma node 2:1604 layout */
+
+  /* Target the task form component within the left column */
+  app-task-form {
+    flex-grow: 1; /* Make task form fill remaining vertical space */
+    width: 100%; /* Ensure it takes the full width of the column */
+  }
+}
+
+app-task-dashboard {
+  flex: 1 1 auto; /* Allow dashboard to take remaining horizontal space */
+  max-width: 1100px; /* Max width for dashboard based on Figma */
+  /* Stretches vertically due to align-items: stretch on parent */
+}
+
+/* Responsive adjustments (basic example) */
+@media (max-width: 1200px) { /* Adjust breakpoint as needed */
+  .main-content {
+    flex-direction: column;
+    align-items: center;
+    /* align-items is now center, stretch won't apply in column layout here */
+
+    .left-column,
+    app-task-dashboard {
+      width: 90%; /* Make components take more width on smaller screens */
+      max-width: none;
+      flex-basis: auto;
+      height: auto; /* Reset height constraints for column layout */
+    }
+     /* Explicitly make task form take its natural height in mobile view */
+    .left-column app-task-form {
+       flex-grow: 0;
+    }
+  }
+} 

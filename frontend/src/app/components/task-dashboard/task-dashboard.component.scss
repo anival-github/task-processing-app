@@ -1,0 +1,118 @@
+:host {
+  display: block;
+  background-color: #FBFAFD; /* fill_3OUX2G */
+  border-radius: 8px;
+  padding: 20px;
+  width: 100%; /* Take available width */
+  max-width: 1100px; /* Figma max width */
+}
+
+.dashboard-container {
+  background-color: #FFFFFF; /* fill_DZT6IA */
+  border: 1px solid #E0E1E5; /* stroke_GKA6BM */
+  border-radius: 8px;
+  overflow-x: auto; /* Allow horizontal scrolling if needed */
+  max-height: 960px; /* Figma height */
+  overflow-y: auto;
+}
+
+.task-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #292830; /* fill_DF3XMO */
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.43;
+  letter-spacing: 0.0107em;
+
+  th, td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid #E0E1E5; /* stroke_CPP6XM */
+    vertical-align: middle;
+  }
+
+  thead tr {
+    background-color: #F9F9F9; /* fill_U3CYXS */
+  }
+
+  th {
+    font-weight: 400; /* Figma uses regular weight */
+  }
+
+  /* Column widths based on Figma */
+  th:nth-child(1), td:nth-child(1) { width: 100px; }
+  th:nth-child(3), td:nth-child(3) { width: 200px; }
+  th:nth-child(4), td:nth-child(4) { width: 100px; }
+  th:nth-child(2), td:nth-child(2) { width: auto; } /* Answer column flexible */
+  th:nth-child(5), td:nth-child(5) { width: auto; } /* Error message flexible */
+
+  th:last-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.refresh-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.52;
+  letter-spacing: 0.0071em;
+  color: #838598; /* fill_7T3TUC */
+
+  img {
+    width: 16px; /* Adjust size as needed */
+    height: 16px;
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.43;
+  letter-spacing: 0.0107em;
+  gap: 8px; /* Gap between icon and text */
+
+  img {
+    width: 14px; /* Adjust icon size */
+    height: 14px;
+  }
+}
+
+.badge-processed {
+  background-color: #EBF7EA; /* fill_BSWFO0 */
+  color: #2F8F2E; /* fill_G2D2W3 */
+}
+
+.badge-failed {
+  background-color: #FCECE9; /* fill_U2N27J */
+  color: #BD3827; /* fill_P03THU */
+  gap: 4px; /* Figma specified smaller gap */
+}
+
+.badge-pending {
+  background-color: #E9F6FC; /* fill_OHK76P */
+  color: #2687BE; /* fill_QNCYW3 */
+}
