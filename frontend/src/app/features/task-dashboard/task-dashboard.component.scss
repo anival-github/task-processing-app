@@ -1,5 +1,5 @@
 .task-dashboard-container {
-  padding: 20px;
+  padding: 0;
   margin: 0 auto;
 }
 
@@ -22,6 +22,8 @@
   min-height: 200px;
   max-height: 600px;
   overflow: auto;
+  border: 1px solid #E0E1E5;
+  border-radius: 8px;
 }
 
 table {
@@ -30,22 +32,18 @@ table {
 
 .mat-column-taskId {
   width: 100px;
-  padding-right: 16px;
 }
 
 .mat-column-answer {
-  min-width: 200px;
-  padding-right: 16px;
+  flex: 1;
 }
 
 .mat-column-status {
-  width: 100px;
-  padding-right: 16px;
+  width: 200px;
 }
 
 .mat-column-retries {
-  width: 80px;
-  padding-right: 16px;
+  width: 100px;
 }
 
 .mat-column-createdAt,
@@ -55,12 +53,36 @@ table {
 }
 
 .mat-column-errorMessage {
-  width: 50px;
-  text-align: center;
+  flex: 1;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background-color: #F9F9F9;
+  border-bottom: 1px solid #E0E1E5;
+  
+  .refresh-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #838598;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.52em;
+    letter-spacing: 0.71%;
+    
+    mat-icon {
+      font-size: 16px;
+    }
+  }
 }
 
 .error-icon {
-  color: #f44336;
+  color: #E53F28;
   cursor: help;
 }
 
@@ -70,10 +92,15 @@ table {
   justify-content: center;
   padding: 16px;
   gap: 8px;
-  color: rgba(0, 0, 0, 0.54);
+  color: #838598;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.43em;
+  letter-spacing: 1.07%;
 
   mat-icon {
-    margin-right: 8px;
+    font-size: 16px;
   }
 }
 
@@ -81,7 +108,7 @@ table {
 .mat-header-row {
   position: sticky;
   top: 0;
-  background: white;
+  background: #F9F9F9;
   z-index: 1;
 }
 

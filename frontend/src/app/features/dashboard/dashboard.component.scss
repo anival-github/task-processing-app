@@ -1,9 +1,10 @@
 .dashboard {
   padding: 20px;
   background: #FBFAFD;
-  min-height: 100vh;
+  min-height: calc(100vh - 80px);
   display: flex;
   justify-content: center;
+  border-radius: 8px;
 
   .table {
     width: 1140px;
