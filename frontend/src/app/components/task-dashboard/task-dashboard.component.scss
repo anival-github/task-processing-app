@@ -48,6 +48,13 @@
   th:nth-child(2), td:nth-child(2) { width: auto; } /* Answer column flexible */
   th:nth-child(5), td:nth-child(5) { width: auto; } /* Error message flexible */
 
+  .answer-cell {
+    max-width: 300px; /* Limit width to prevent excessive stretching */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   th:last-child {
     display: flex;
     justify-content: space-between;
@@ -115,4 +122,10 @@
 .badge-pending {
   background-color: #E9F6FC; /* fill_OHK76P */
   color: #2687BE; /* fill_QNCYW3 */
+}
+
+/* Added style for Processing status */
+.badge-processing {
+  background-color: #FEFBE7; /* Example: Light yellow */
+  color: #B48A06; /* Example: Dark yellow/brown */
 }

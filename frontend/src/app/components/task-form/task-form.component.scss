@@ -25,6 +25,7 @@
   background-color: #FFFFFF; /* fill_1662GK */
   box-shadow: 0px 8px 24px 0px rgba(51, 57, 105, 0.08), 0px -1px 2px 0px rgba(51, 57, 105, 0.09); /* effect_7L9QQY / effect_XNYQUG */
   border-radius: 8px; /* From nodes 2:1605 & 2:1611 */
+  width: 100%; /* Explicitly take full width of parent */
 }
 
 .question-section {
@@ -35,6 +36,8 @@
   justify-content: center;
   text-align: left; /* Align text left within the centered block */
   gap: 20px;
+  height: 320px; /* Fixed height from Figma node 2:1605 */
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .question-label {
@@ -62,6 +65,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  flex-grow: 1; /* Fill remaining vertical space in .form-content */
 }
 
 .answer-label {
@@ -79,11 +83,13 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex-grow: 1; /* Make container expand vertically within answer-section */
 }
 
 .text-area {
   width: 100%;
-  min-height: 150px; /* Keep approximate height for now */
+  /* min-height: 150px; -> Remove min-height, let flexbox control height */
+  flex-grow: 1; /* Make text area expand vertically within its container */
   padding: 12px 16px;
   border: 1px solid #E0E1E5; /* stroke_AYGHAV */
   border-radius: 8px;

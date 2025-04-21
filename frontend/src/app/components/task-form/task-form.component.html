@@ -10,14 +10,23 @@
     <div class="answer-section">
       <div class="answer-label">Answer:</div>
       <div class="text-field-container">
-        <textarea class="text-area" placeholder="Enter your answer"></textarea>
-        <div class="word-count">0/200</div>
+        <textarea 
+          class="text-area" 
+          placeholder="Enter your answer" 
+          [(ngModel)]="taskAnswer" 
+          maxlength="200"
+          name="taskAnswerTextArea">
+        </textarea>
+        <div class="word-count">{{ taskAnswer.length || 0 }}/200</div>
       </div>
     </div>
   </div>
 
   <div class="footer-section">
-    <button class="submit-button">
+    <button 
+      class="submit-button" 
+      (click)="submitTask()" 
+      [disabled]="!taskAnswer || taskAnswer.trim().length === 0">
       Submit
     </button>
   </div>
