@@ -7,15 +7,12 @@ provider:
   region: us-east-1 # Or your preferred region
   httpApi: # Use HTTP API for simpler setup and lower cost
     cors: true # Enable CORS for frontend interaction
-  websocketsApi: # Define WebSocket API config
-    routeSelectionExpression: $request.body.action
   environment: # Environment variables available to all functions
     TASKS_TABLE_NAME: ${self:custom.tasksTableName}
     TASK_QUEUE_URL: { Ref: TaskQueue } # Get URL of the TaskQueue
     TASK_DLQ_URL: { Ref: TaskDLQ }     # Get URL of the TaskDLQ
     STEP_FUNCTIONS_ARN: { Ref: TaskProcessingStateMachine } # State machine ARN
-    WEBSOCKET_API_ENDPOINT: wss://${WebsocketsApi}.execute-api.${aws:region}.amazonaws.com/${sls:stage} # Websocket API Endpoint
-    # Add WebSocket Connections Table Name
+    WEBSOCKET_API_ENDPOINT: wss://#{ApiGatewayWebsocketApiId}.execute-api.${aws:region}.amazonaws.com/${sls:stage} # Use implicit API ID
     CONNECTIONS_TABLE_NAME: ${self:custom.connectionsTableName}
 
   iam:
@@ -25,7 +22,6 @@ provider:
           Action: [dynamodb:Query, dynamodb:Scan, dynamodb:GetItem, dynamodb:PutItem, dynamodb:UpdateItem, dynamodb:DeleteItem]
           Resource:
             - Fn::GetAtt: [TasksTable, Arn]
-            # Add index permissions if needed later
         - Effect: Allow # DynamoDB Connections Table (for WebSockets)
           Action: [dynamodb:Query, dynamodb:Scan, dynamodb:GetItem, dynamodb:PutItem, dynamodb:UpdateItem, dynamodb:DeleteItem]
           Resource:
@@ -39,18 +35,18 @@ provider:
           Action: [states:StartExecution]
           Resource:
             - Ref: TaskProcessingStateMachine
-        - Effect: Allow # WebSocket Management
+        - Effect: Allow # WebSocket Management - Use implicit API ID
           Action: [execute-api:ManageConnections]
           Resource:
-            - arn:aws:execute-api:${aws:region}:${aws:accountId}:${WebsocketsApi}/*
-        - Effect: Allow # DynamoDB Streams
+            - arn:aws:execute-api:${aws:region}:${aws:accountId}:#{ApiGatewayWebsocketApiId}/*
+        - Effect: Allow # DynamoDB Streams (Still needed for other potential triggers, keep for now or remove if notifyClients is the only user)
           Action: [dynamodb:GetRecords, dynamodb:GetShardIterator, dynamodb:DescribeStream, dynamodb:ListStreams]
           Resource:
              Fn::GetAtt: [TasksTable, StreamArn] # Permission for the specific stream
 
 custom:
   tasksTableName: ${sls:stage}-tasks-table
-  connectionsTableName: ${sls:stage}-websocket-connections
+  connectionsTableName: ${sls:stage}-websocket-connections # Uncommented
   processTaskLambdaArn: arn:aws:lambda:${aws:region}:${aws:accountId}:function:${self:service}-${sls:stage}-processTaskLambda
   handleFailureLambdaArn: arn:aws:lambda:${aws:region}:${aws:accountId}:function:${self:service}-${sls:stage}-handleFailureLambda
 
@@ -87,7 +83,7 @@ functions:
           arn: { Fn::GetAtt: [TaskDLQ, Arn] }
           batchSize: 1
 
-  # WebSocket Handlers
+  # WebSocket Handlers - Uncommented
   connectLambda:
     handler: src/handlers/websocketConnect.handler
     events:
@@ -100,13 +96,13 @@ functions:
       - websocket:
           route: $disconnect
 
-  defaultHandlerLambda: # Handles messages without a specific route
+  defaultHandlerLambda: 
     handler: src/handlers/websocketDefault.handler
     events:
       - websocket:
           route: $default
   
-  # Lambda triggered by DynamoDB Stream to notify clients
+  # Lambda triggered by DynamoDB Stream to notify clients - Uncommented
   notifyClientsLambda:
     handler: src/handlers/notifyClients.handler
     events:
@@ -116,13 +112,11 @@ functions:
           batchSize: 1
           startingPosition: LATEST
           filterPatterns:
-            - eventName: [MODIFY] # Only trigger on updates
+            - eventName: [MODIFY]
               dynamodb:
                   NewImage:
                     status:
-                      # Trigger for final states (Processed/Failed)
-                      # Adjust if intermediate updates are needed
-                      S: [Processed, Failed] 
+                      S: [Processed, Failed]
 
   handleFailureLambda: # Invoked by Step Function Catch
     handler: src/handlers/handleFailure.handler
@@ -141,9 +135,9 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
         StreamSpecification:
-          StreamViewType: NEW_IMAGE 
+          StreamViewType: NEW_IMAGE
 
-    # Table to store WebSocket connection IDs
+    # Table to store WebSocket connection IDs - Uncommented
     ConnectionsTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -184,7 +178,7 @@ resources:
                 "Resource": "${self:custom.processTaskLambdaArn}",
                 "Retry": [
                   {
-                    "ErrorEquals": ["States.TaskFailed", "States.ALL"],
+                    "ErrorEquals": ["States.ALL"],
                     "IntervalSeconds": 3,
                     "MaxAttempts": 2,
                     "BackoffRate": 2.0
@@ -207,11 +201,6 @@ resources:
                       "ErrorInfo.$": "$.errorInfo"
                   },
                   "End": true
-              },
-              "NotifyFailure": {
-                "Type": "Pass",
-                "Result": "Task failed after retries",
-                "End": true
               }
             }
           }
@@ -225,7 +214,7 @@ resources:
           Statement:
             - Effect: Allow
               Principal:
-                Service: [ states.${aws:region}.amazonaws.com ]
+                Service: states.${aws:region}.amazonaws.com
               Action: sts:AssumeRole
         Policies:
           - PolicyName: StepFunctionsExecutionPolicy
@@ -238,106 +227,34 @@ resources:
                     - "${self:custom.processTaskLambdaArn}"
                     - "${self:custom.handleFailureLambdaArn}"
 
-    WebsocketsApi:
-      Type: AWS::ApiGatewayV2::Api
+    # Role for API Gateway to invoke Lambda functions - Still needed for implicit integrations
+    TaskProcessingApiGatewayIntegrationRole:
+      Type: AWS::IAM::Role
       Properties:
-        Name: ${sls:stage}-task-websockets
-        ProtocolType: WEBSOCKET
-        RouteSelectionExpression: "$request.body.action"
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: apigateway.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: ApiGatewayInvokeLambdaPolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action: lambda:InvokeFunction
+                  Resource: # Allow invoking all relevant Lambda functions
+                    - Fn::Sub: 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${self:service}-${sls:stage}-connectLambda'
+                    - Fn::Sub: 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${self:service}-${sls:stage}-disconnectLambda'
+                    - Fn::Sub: 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${self:service}-${sls:stage}-defaultHandlerLambda'
 
-    # Add WebSocket Deployment and Stage
-    WebsocketsDeployment:
-        Type: AWS::ApiGatewayV2::Deployment
-        DependsOn:
-          # Ensure routes are created before deployment
-          - WebsocketsConnectRoute
-          - WebsocketsDisconnectRoute
-          - WebsocketsDefaultRoute
-        Properties:
-          ApiId: { Ref: WebsocketsApi }
-
-    WebsocketsStage:
-      Type: AWS::ApiGatewayV2::Stage
-      Properties:
-        ApiId: { Ref: WebsocketsApi }
-        DeploymentId: { Ref: WebsocketsDeployment }
-        StageName: ${sls:stage} # Use the Serverless stage name
-
-    # Define WebSocket Routes
-    WebsocketsConnectRoute:
-      Type: AWS::ApiGatewayV2::Route
-      Properties:
-        ApiId: { Ref: WebsocketsApi }
-        RouteKey: $connect
-        AuthorizationType: NONE
-        OperationName: ConnectRoute
-        Target: !Join
-          - '/'
-          - - integrations
-            - !Ref ConnectLambdaIntegration
-
-    WebsocketsDisconnectRoute:
-      Type: AWS::ApiGatewayV2::Route
-      Properties:
-        ApiId: { Ref: WebsocketsApi }
-        RouteKey: $disconnect
-        AuthorizationType: NONE
-        OperationName: DisconnectRoute
-        Target: !Join
-          - '/'
-          - - integrations
-            - !Ref DisconnectLambdaIntegration
-
-    WebsocketsDefaultRoute:
-      Type: AWS::ApiGatewayV2::Route
-      Properties:
-        ApiId: { Ref: WebsocketsApi }
-        RouteKey: $default
-        AuthorizationType: NONE
-        OperationName: DefaultRoute
-        Target: !Join
-          - '/'
-          - - integrations
-            - !Ref DefaultLambdaIntegration
-
-    # Define Lambda Integrations for WebSocket Routes
-    ConnectLambdaIntegration:
-      Type: AWS::ApiGatewayV2::Integration
-      Properties:
-        ApiId: { Ref: WebsocketsApi }
-        Description: Connect Integration
-        IntegrationType: AWS_PROXY
-        IntegrationUri: 
-          Fn::Join:
-            - ''
-            - - 'arn:aws:apigateway:${aws:region}:lambda:path/2015-03-31/functions/'
-              - { Fn::GetAtt: [ConnectLambdaLambdaFunction, Arn] }
-              - /invocations
-
-    DisconnectLambdaIntegration:
-      Type: AWS::ApiGatewayV2::Integration
-      Properties:
-        ApiId: { Ref: WebsocketsApi }
-        Description: Disconnect Integration
-        IntegrationType: AWS_PROXY
-        IntegrationUri: 
-          Fn::Join:
-            - ''
-            - - 'arn:aws:apigateway:${aws:region}:lambda:path/2015-03-31/functions/'
-              - { Fn::GetAtt: [DisconnectLambdaLambdaFunction, Arn] }
-              - /invocations
-
-    DefaultLambdaIntegration:
-      Type: AWS::ApiGatewayV2::Integration
-      Properties:
-        ApiId: { Ref: WebsocketsApi }
-        Description: Default Integration
-        IntegrationType: AWS_PROXY
-        IntegrationUri: 
-          Fn::Join:
-            - ''
-            - - 'arn:aws:apigateway:${aws:region}:lambda:path/2015-03-31/functions/'
-              - { Fn::GetAtt: [DefaultHandlerLambdaLambdaFunction, Arn] }
-              - /invocations
-
-    # Define other resources like WebSocket Routes, Stages, Lambda Triggers later 
+    # The `WebsocketsApi` resource is defined in `resources.yml`
+    # The following routes, deployment, and stage are commented out for incremental deployment
+    # routes:
+    #   $connect: connectLambda
+    #   $disconnect: disconnectLambda
+    #   $default: defaultHandlerLambda
+    # deploymentId: ${self:provider.websocketsApiDeploymentId}
+    # stage: ${sls:stage} 
