@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SharedModule } from '../../shared/shared.module';
 
 import { TaskSubmissionComponent } from './task-submission.component';
 
@@ -20,7 +21,8 @@ import { TaskSubmissionComponent } from './task-submission.component';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    SharedModule
   ],
   exports: [
     TaskSubmissionComponent
