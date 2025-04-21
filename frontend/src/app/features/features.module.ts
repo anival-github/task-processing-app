@@ -1,21 +1,26 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TaskSubmissionComponent } from './task-submission/task-submission.component';
-import { TaskDashboardComponent } from './task-dashboard/task-dashboard.component';
-import { TaskFormComponent } from './task-form/task-form.component';
-import { TaskListComponent } from './task-list/task-list.component';
-
-
+import { FormsModule } from '@angular/forms';
+import { TaskComponent } from './task/task.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { HomeComponent } from './home/home.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
-    TaskSubmissionComponent,
-    TaskDashboardComponent,
-    TaskFormComponent,
-    TaskListComponent
+    TaskComponent,
+    DashboardComponent,
+    HomeComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    SharedModule,
+    FormsModule
+  ],
+  exports: [
+    TaskComponent,
+    DashboardComponent,
+    HomeComponent
   ]
 })
 export class FeaturesModule { }

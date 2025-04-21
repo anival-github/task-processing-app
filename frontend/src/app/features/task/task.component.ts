@@ -14,9 +14,9 @@ export class TaskComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onAnswerChange(event: any): void {
-    const words = event.target.value.trim().split(/\s+/);
-    this.wordCount = words[0] === '' ? 0 : words.length;
+  onAnswerChange(): void {
+    const words = this.answer.trim().split(/\s+/);
+    this.wordCount = this.answer.trim() === '' ? 0 : words.length;
   }
 
   onSubmit(): void {

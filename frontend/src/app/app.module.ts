@@ -16,16 +16,13 @@ import { SharedModule } from './shared/shared.module';
 import { TaskState } from './store/task.state';
 import { TaskSubmissionModule } from './features/task-submission/task-submission.module';
 import { TaskDashboardModule } from './features/task-dashboard/task-dashboard.module';
-import { TaskComponent } from './features/task/task.component';
-import { DashboardComponent } from './features/dashboard/dashboard.component';
+import { FeaturesModule } from './features/features.module';
 
 import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    TaskComponent,
-    DashboardComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -38,6 +35,7 @@ import { environment } from '../environments/environment';
     TaskSubmissionModule,
     TaskDashboardModule,
     FormsModule,
+    FeaturesModule,
     NgxsModule.forRoot([TaskState], {
       developmentMode: !environment.production
     }),

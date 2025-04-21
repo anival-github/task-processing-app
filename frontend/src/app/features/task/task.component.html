@@ -21,7 +21,7 @@
         <div class="input-container">
           <textarea
             [(ngModel)]="answer"
-            (input)="onAnswerChange($event)"
+            (ngModelChange)="onAnswerChange()"
             placeholder="Enter your answer"
             [maxLength]="maxWords * 5"
             class="answer-input"

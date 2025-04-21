@@ -1,0 +1,18 @@
+.home-container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #3F50C3 0%, #1C2969 100%);
+  padding: 20px;
+  gap: 20px;
+}
+
+.task-section {
+  flex: 0 0 auto;
+  width: 660px;
+}
+
+.dashboard-section {
+  flex: 1;
+  min-width: 0; // Prevent flex item from overflowing
+} 
