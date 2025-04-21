@@ -1,0 +1,18 @@
+{
+  "name": "task-processing-backend",
+  "version": "1.0.0",
+  "description": "Backend for Task Processing App",
+  "type": "module",
+  "dependencies": {
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.787.0",
+    "@aws-sdk/client-dynamodb": "^3.788.0",
+    "@aws-sdk/client-sfn": "^3.787.0",
+    "@aws-sdk/client-sqs": "^3.787.0",
+    "@aws-sdk/lib-dynamodb": "^3.789.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

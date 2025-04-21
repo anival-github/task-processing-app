@@ -1,0 +1,343 @@
+service: task-processing-backend
+frameworkVersion: '3' # Or your specific version
+
+provider:
+  name: aws
+  runtime: nodejs18.x # Specify Node.js version
+  region: us-east-1 # Or your preferred region
+  httpApi: # Use HTTP API for simpler setup and lower cost
+    cors: true # Enable CORS for frontend interaction
+  websocketsApi: # Define WebSocket API config
+    routeSelectionExpression: $request.body.action
+  environment: # Environment variables available to all functions
+    TASKS_TABLE_NAME: ${self:custom.tasksTableName}
+    TASK_QUEUE_URL: { Ref: TaskQueue } # Get URL of the TaskQueue
+    TASK_DLQ_URL: { Ref: TaskDLQ }     # Get URL of the TaskDLQ
+    STEP_FUNCTIONS_ARN: { Ref: TaskProcessingStateMachine } # State machine ARN
+    WEBSOCKET_API_ENDPOINT: wss://${WebsocketsApi}.execute-api.${aws:region}.amazonaws.com/${sls:stage} # Websocket API Endpoint
+    # Add WebSocket Connections Table Name
+    CONNECTIONS_TABLE_NAME: ${self:custom.connectionsTableName}
+
+  iam:
+    role:
+      statements: # Permissions for all functions (can be refined per function)
+        - Effect: Allow # DynamoDB Tasks Table
+          Action: [dynamodb:Query, dynamodb:Scan, dynamodb:GetItem, dynamodb:PutItem, dynamodb:UpdateItem, dynamodb:DeleteItem]
+          Resource:
+            - Fn::GetAtt: [TasksTable, Arn]
+            # Add index permissions if needed later
+        - Effect: Allow # DynamoDB Connections Table (for WebSockets)
+          Action: [dynamodb:Query, dynamodb:Scan, dynamodb:GetItem, dynamodb:PutItem, dynamodb:UpdateItem, dynamodb:DeleteItem]
+          Resource:
+            - Fn::GetAtt: [ConnectionsTable, Arn]
+        - Effect: Allow # SQS Send/Receive/Delete
+          Action: [sqs:SendMessage, sqs:ReceiveMessage, sqs:DeleteMessage, sqs:GetQueueAttributes]
+          Resource:
+            - Fn::GetAtt: [TaskQueue, Arn]
+            - Fn::GetAtt: [TaskDLQ, Arn]
+        - Effect: Allow # Step Functions Start Execution
+          Action: [states:StartExecution]
+          Resource:
+            - Ref: TaskProcessingStateMachine
+        - Effect: Allow # WebSocket Management
+          Action: [execute-api:ManageConnections]
+          Resource:
+            - arn:aws:execute-api:${aws:region}:${aws:accountId}:${WebsocketsApi}/*
+        - Effect: Allow # DynamoDB Streams
+          Action: [dynamodb:GetRecords, dynamodb:GetShardIterator, dynamodb:DescribeStream, dynamodb:ListStreams]
+          Resource:
+             Fn::GetAtt: [TasksTable, StreamArn] # Permission for the specific stream
+
+custom:
+  tasksTableName: ${sls:stage}-tasks-table
+  connectionsTableName: ${sls:stage}-websocket-connections
+  processTaskLambdaArn: arn:aws:lambda:${aws:region}:${aws:accountId}:function:${self:service}-${sls:stage}-processTaskLambda
+  handleFailureLambdaArn: arn:aws:lambda:${aws:region}:${aws:accountId}:function:${self:service}-${sls:stage}-handleFailureLambda
+
+functions:
+  submitTaskLambda:
+    handler: src/handlers/submitTask.handler
+    events:
+      - httpApi:
+          path: /tasks
+          method: post
+
+  getTasksLambda:
+    handler: src/handlers/getTasks.handler
+    events:
+      - httpApi:
+          path: /tasks
+          method: get
+
+  startStateMachineLambda:
+    handler: src/handlers/startStateMachine.handler
+    events:
+      - sqs:
+          arn: { Fn::GetAtt: [TaskQueue, Arn] }
+          batchSize: 1 # Process one task message at a time
+
+  processTaskLambda: # Invoked by Step Function
+    handler: src/handlers/processTask.handler
+    # No event trigger here
+
+  dlqMonitorLambda:
+    handler: src/handlers/dlqMonitor.handler
+    events:
+      - sqs:
+          arn: { Fn::GetAtt: [TaskDLQ, Arn] }
+          batchSize: 1
+
+  # WebSocket Handlers
+  connectLambda:
+    handler: src/handlers/websocketConnect.handler
+    events:
+      - websocket:
+          route: $connect
+
+  disconnectLambda:
+    handler: src/handlers/websocketDisconnect.handler
+    events:
+      - websocket:
+          route: $disconnect
+
+  defaultHandlerLambda: # Handles messages without a specific route
+    handler: src/handlers/websocketDefault.handler
+    events:
+      - websocket:
+          route: $default
+  
+  # Lambda triggered by DynamoDB Stream to notify clients
+  notifyClientsLambda:
+    handler: src/handlers/notifyClients.handler
+    events:
+      - stream:
+          type: dynamodb
+          arn: { Fn::GetAtt: [TasksTable, StreamArn] }
+          batchSize: 1
+          startingPosition: LATEST
+          filterPatterns:
+            - eventName: [MODIFY] # Only trigger on updates
+              dynamodb:
+                  NewImage:
+                    status:
+                      # Trigger for final states (Processed/Failed)
+                      # Adjust if intermediate updates are needed
+                      S: [Processed, Failed] 
+
+  handleFailureLambda: # Invoked by Step Function Catch
+    handler: src/handlers/handleFailure.handler
+
+resources:
+  Resources:
+    TasksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tasksTableName}
+        AttributeDefinitions:
+          - AttributeName: taskId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: taskId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE 
+
+    # Table to store WebSocket connection IDs
+    ConnectionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.connectionsTableName}
+        AttributeDefinitions:
+          - AttributeName: connectionId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: connectionId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    TaskQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${sls:stage}-TaskQueue
+        RedrivePolicy:
+          # Use Fn::GetAtt for ARNs
+          deadLetterTargetArn: { Fn::GetAtt: [TaskDLQ, Arn] }
+          maxReceiveCount: 3
+
+    TaskDLQ:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${sls:stage}-TaskDLQ
+
+    TaskProcessingStateMachine:
+      Type: AWS::StepFunctions::StateMachine
+      Properties:
+        StateMachineName: ${sls:stage}-TaskProcessingStateMachine
+        DefinitionString: |
+          {
+            "Comment": "Task Processing State Machine",
+            "StartAt": "ProcessTask",
+            "States": {
+              "ProcessTask": {
+                "Type": "Task",
+                "Resource": "${self:custom.processTaskLambdaArn}",
+                "Retry": [
+                  {
+                    "ErrorEquals": ["States.TaskFailed", "States.ALL"],
+                    "IntervalSeconds": 3,
+                    "MaxAttempts": 2,
+                    "BackoffRate": 2.0
+                  }
+                ],
+                "Catch": [
+                  {
+                    "ErrorEquals": ["States.ALL"],
+                    "ResultPath": "$.errorInfo",
+                    "Next": "HandleFailureState"
+                  }
+                ],
+                "End": true
+              },
+              "HandleFailureState": {
+                  "Type": "Task",
+                  "Resource": "${self:custom.handleFailureLambdaArn}",
+                  "Parameters": {
+                      "TaskInput.$": "$",
+                      "ErrorInfo.$": "$.errorInfo"
+                  },
+                  "End": true
+              },
+              "NotifyFailure": {
+                "Type": "Pass",
+                "Result": "Task failed after retries",
+                "End": true
+              }
+            }
+          }
+        RoleArn: { Fn::GetAtt: [StateMachineExecutionRole, Arn] }
+
+    StateMachineExecutionRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: [ states.${aws:region}.amazonaws.com ]
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: StepFunctionsExecutionPolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action: lambda:InvokeFunction
+                  Resource:
+                    - "${self:custom.processTaskLambdaArn}"
+                    - "${self:custom.handleFailureLambdaArn}"
+
+    WebsocketsApi:
+      Type: AWS::ApiGatewayV2::Api
+      Properties:
+        Name: ${sls:stage}-task-websockets
+        ProtocolType: WEBSOCKET
+        RouteSelectionExpression: "$request.body.action"
+
+    # Add WebSocket Deployment and Stage
+    WebsocketsDeployment:
+        Type: AWS::ApiGatewayV2::Deployment
+        DependsOn:
+          # Ensure routes are created before deployment
+          - WebsocketsConnectRoute
+          - WebsocketsDisconnectRoute
+          - WebsocketsDefaultRoute
+        Properties:
+          ApiId: { Ref: WebsocketsApi }
+
+    WebsocketsStage:
+      Type: AWS::ApiGatewayV2::Stage
+      Properties:
+        ApiId: { Ref: WebsocketsApi }
+        DeploymentId: { Ref: WebsocketsDeployment }
+        StageName: ${sls:stage} # Use the Serverless stage name
+
+    # Define WebSocket Routes
+    WebsocketsConnectRoute:
+      Type: AWS::ApiGatewayV2::Route
+      Properties:
+        ApiId: { Ref: WebsocketsApi }
+        RouteKey: $connect
+        AuthorizationType: NONE
+        OperationName: ConnectRoute
+        Target: !Join
+          - '/'
+          - - integrations
+            - !Ref ConnectLambdaIntegration
+
+    WebsocketsDisconnectRoute:
+      Type: AWS::ApiGatewayV2::Route
+      Properties:
+        ApiId: { Ref: WebsocketsApi }
+        RouteKey: $disconnect
+        AuthorizationType: NONE
+        OperationName: DisconnectRoute
+        Target: !Join
+          - '/'
+          - - integrations
+            - !Ref DisconnectLambdaIntegration
+
+    WebsocketsDefaultRoute:
+      Type: AWS::ApiGatewayV2::Route
+      Properties:
+        ApiId: { Ref: WebsocketsApi }
+        RouteKey: $default
+        AuthorizationType: NONE
+        OperationName: DefaultRoute
+        Target: !Join
+          - '/'
+          - - integrations
+            - !Ref DefaultLambdaIntegration
+
+    # Define Lambda Integrations for WebSocket Routes
+    ConnectLambdaIntegration:
+      Type: AWS::ApiGatewayV2::Integration
+      Properties:
+        ApiId: { Ref: WebsocketsApi }
+        Description: Connect Integration
+        IntegrationType: AWS_PROXY
+        IntegrationUri: 
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:${aws:region}:lambda:path/2015-03-31/functions/'
+              - { Fn::GetAtt: [ConnectLambdaLambdaFunction, Arn] }
+              - /invocations
+
+    DisconnectLambdaIntegration:
+      Type: AWS::ApiGatewayV2::Integration
+      Properties:
+        ApiId: { Ref: WebsocketsApi }
+        Description: Disconnect Integration
+        IntegrationType: AWS_PROXY
+        IntegrationUri: 
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:${aws:region}:lambda:path/2015-03-31/functions/'
+              - { Fn::GetAtt: [DisconnectLambdaLambdaFunction, Arn] }
+              - /invocations
+
+    DefaultLambdaIntegration:
+      Type: AWS::ApiGatewayV2::Integration
+      Properties:
+        ApiId: { Ref: WebsocketsApi }
+        Description: Default Integration
+        IntegrationType: AWS_PROXY
+        IntegrationUri: 
+          Fn::Join:
+            - ''
+            - - 'arn:aws:apigateway:${aws:region}:lambda:path/2015-03-31/functions/'
+              - { Fn::GetAtt: [DefaultHandlerLambdaLambdaFunction, Arn] }
+              - /invocations
+
+    # Define other resources like WebSocket Routes, Stages, Lambda Triggers later 
