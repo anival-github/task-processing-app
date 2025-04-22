@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiUrl: '/api', // Example API URL
-  wsUrl: 'ws://localhost:8081' // Default WebSocket URL for dev
+  apiUrl: 'https://ted8jrx2ml.execute-api.us-east-1.amazonaws.com', // Updated absolute API URL
+  wsUrl: 'wss://8khl27499l.execute-api.us-east-1.amazonaws.com/dev' // Updated WebSocket URL
 }; 

@@ -12,7 +12,11 @@ provider:
     TASK_QUEUE_URL: { Ref: TaskQueue } # Get URL of the TaskQueue
     TASK_DLQ_URL: { Ref: TaskDLQ }     # Get URL of the TaskDLQ
     STEP_FUNCTIONS_ARN: { Ref: TaskProcessingStateMachine } # State machine ARN
-    WEBSOCKET_API_ENDPOINT: wss://#{ApiGatewayWebsocketApiId}.execute-api.${aws:region}.amazonaws.com/${sls:stage} # Use implicit API ID
+    # Use Ref: WebsocketsApi which references the default logical ID assigned by Serverless Framework
+    WEBSOCKET_API_ENDPOINT: 
+      Fn::Sub: 'wss://${WebsocketsApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}' 
+    MANAGEMENT_API_ENDPOINT: 
+      Fn::Sub: 'https://${WebsocketsApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}' 
     CONNECTIONS_TABLE_NAME: ${self:custom.connectionsTableName}
 
   iam:
@@ -35,11 +39,12 @@ provider:
           Action: [states:StartExecution]
           Resource:
             - Ref: TaskProcessingStateMachine
-        - Effect: Allow # WebSocket Management - Use implicit API ID
+        # Use Ref: WebsocketsApi for the implicitly created API
+        - Effect: Allow # WebSocket Management
           Action: [execute-api:ManageConnections]
-          Resource:
-            - arn:aws:execute-api:${aws:region}:${aws:accountId}:#{ApiGatewayWebsocketApiId}/*
-        - Effect: Allow # DynamoDB Streams (Still needed for other potential triggers, keep for now or remove if notifyClients is the only user)
+          Resource: 
+            - Fn::Sub: 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${WebsocketsApi}/*'
+        - Effect: Allow # DynamoDB Streams
           Action: [dynamodb:GetRecords, dynamodb:GetShardIterator, dynamodb:DescribeStream, dynamodb:ListStreams]
           Resource:
              Fn::GetAtt: [TasksTable, StreamArn] # Permission for the specific stream
@@ -227,7 +232,7 @@ resources:
                     - "${self:custom.processTaskLambdaArn}"
                     - "${self:custom.handleFailureLambdaArn}"
 
-    # Role for API Gateway to invoke Lambda functions - Still needed for implicit integrations
+    # Role for API Gateway to invoke Lambda functions - Still needed
     TaskProcessingApiGatewayIntegrationRole:
       Type: AWS::IAM::Role
       Properties:

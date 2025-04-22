@@ -5,14 +5,16 @@ import { PostToConnectionCommand } from "@aws-sdk/client-apigatewaymanagementapi
 import { unmarshall } from "@aws-sdk/util-dynamodb"; // Helper to convert DynamoDB JSON to regular JSON
 
 const CONNECTIONS_TABLE_NAME = process.env.CONNECTIONS_TABLE_NAME;
-const WEBSOCKET_API_ENDPOINT = process.env.WEBSOCKET_API_ENDPOINT;
+// Use the dedicated endpoint for the Management API client
+const MANAGEMENT_API_ENDPOINT = process.env.MANAGEMENT_API_ENDPOINT;
 
-// Initialize API Gateway client (needs endpoint)
-// Ensure the endpoint does NOT start with wss:// for the SDK client
-const endpoint = WEBSOCKET_API_ENDPOINT?.replace('wss://', 'https://');
-const apiGwClien = endpoint ? apiGatewayManagementApiClient(endpoint) : null;
+// Initialize API Gateway client
+const apiGwClien = MANAGEMENT_API_ENDPOINT ? apiGatewayManagementApiClient(MANAGEMENT_API_ENDPOINT) : null;
 
 export const handler = async (event) => {
+    // Log the received endpoint for debugging
+    console.log('MANAGEMENT_API_ENDPOINT:', MANAGEMENT_API_ENDPOINT);
+    
     console.log('Received DynamoDB Stream event:', JSON.stringify(event, null, 2));
 
     if (!apiGwClien) {
