@@ -1,4 +1,11 @@
-<div class="dashboard-container">
+<!-- Loader shown when loading$ is true -->
+<div class="loader-container" *ngIf="loading$ | async">
+  <!-- <div class="loader"></div> Simple CSS loader - Replaced -->
+  <img src="/assets/icons/loader.svg" alt="Loading..." class="loader-svg">
+</div>
+
+<!-- Table container shown when loading$ is false -->
+<div class="dashboard-container" *ngIf="!(loading$ | async)">
   <table class="task-table">
     <thead>
       <tr>
@@ -29,8 +36,8 @@
         <td>{{ task.retries }}</td>
         <td>{{ task.errorMessage || '-' }}</td>
       </tr>
-      <!-- Show message if no tasks -->
-      <tr *ngIf="(tasks$ | async)?.length === 0">
+      <!-- Show message if no tasks AND not loading -->
+      <tr *ngIf="(tasks$ | async)?.length === 0 && !(loading$ | async)">
         <td colspan="5" style="text-align: center; padding: 20px;">No tasks submitted yet.</td>
       </tr>
     </tbody>

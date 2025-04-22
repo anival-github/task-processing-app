@@ -124,8 +124,44 @@
   color: #2687BE; /* fill_QNCYW3 */
 }
 
-/* Added style for Processing status */
-.badge-processing {
-  background-color: #FEFBE7; /* Example: Light yellow */
-  color: #B48A06; /* Example: Dark yellow/brown */
+// Loader styles
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;  // Ensure it takes full width of host
+  height: 100%; // Ensure it takes full height of host (host needs defined height or ability to grow)
 }
+
+/* Removed old .loader styles
+.loader {
+  border: 14px solid #E0E1E5; // Figma background stroke color and weight
+  border-top-color: #5061D0; // Figma gradient end color for the spinning part
+  border-radius: 50%;
+  width: 70px; // Increased size
+  height: 70px; // Increased size
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px; // Space between spinner and text
+}
+*/
+
+// Styles for the SVG loader
+.loader-svg {
+  width: 100px; // Updated size
+  height: 100px; // Updated size
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Optional: Style the loading text - Removed as text is gone
+/*
+.loader-container p {
+  color: #555;
+  font-size: 1em;
+}
+*/

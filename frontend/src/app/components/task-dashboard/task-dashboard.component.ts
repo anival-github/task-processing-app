@@ -12,7 +12,7 @@ import { FetchTasks } from '../../store/tasks/tasks.actions';
 })
 export class TaskDashboardComponent {
   @Select(TasksState.getTasks) tasks$!: Observable<Task[]>;
-  // Could also select loading state if needed: @Select(TasksState.isLoading) loading$!: Observable<boolean>;
+  @Select(TasksState.isLoading) loading$!: Observable<boolean>;
 
   constructor(private store: Store) {}
 
@@ -26,7 +26,6 @@ export class TaskDashboardComponent {
       case 'Processed': return 'badge-processed';
       case 'Failed': return 'badge-failed';
       case 'Pending': return 'badge-pending';
-      case 'Processing': return 'badge-processing'; // Add if needed
       default: return '';
     }
   }
@@ -37,7 +36,6 @@ export class TaskDashboardComponent {
       case 'Processed': return 'assets/icons/check-circle.svg';
       case 'Failed': return 'assets/icons/close-circle.svg';
       case 'Pending': return 'assets/icons/clock.svg';
-      case 'Processing': return 'assets/icons/clock.svg'; // Example: use clock for processing too
       default: return '';
     }
   }

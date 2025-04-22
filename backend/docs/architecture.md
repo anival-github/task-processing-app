@@ -49,7 +49,6 @@ graph TD
 
     SQS -- TaskId Message --> StartSFL
     StartSFL -- Get Task --> DDB_Tasks
-    StartSFL -- Update Status (Processing) --> DDB_Tasks
     StartSFL -- Start Execution --> SFN
 
     SFN -- Invoke --> ProcessL
@@ -79,7 +78,7 @@ graph TD
 
 1.  **Task Submission**: Frontend sends task details to API Gateway (HTTP), triggering `submitTaskLambda`. This Lambda saves the task (status: Pending) to DynamoDB and sends the `taskId` to SQS.
 2.  **Task Fetching**: Frontend requests tasks from API Gateway (HTTP), triggering `getTasksLambda`, which scans DynamoDB.
-3.  **Processing Start**: SQS triggers `startStateMachineLambda`, which fetches task details from DynamoDB, updates status to Processing, and starts the Step Function.
+3.  **Processing Start**: SQS triggers `startStateMachineLambda`, which fetches task details from DynamoDB and starts the Step Function execution (task remains Pending).
 4.  **Step Function Execution**: The Step Function invokes `processTaskLambda`. 
 5.  **Success**: `processTaskLambda` updates DynamoDB status to Processed.
 6.  **Failure/Retry**: If `processTaskLambda` fails (simulated 30% chance), Step Function retries based on the policy. After retries, it invokes `handleFailureLambda` via the Catch block, which updates DynamoDB status to Failed.

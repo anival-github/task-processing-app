@@ -40,22 +40,6 @@ export const handler = async (event) => {
                 continue; // Move to next record
             }
 
-            // 2. Update task status to 'Processing'
-            const updateParams = {
-                TableName: TASKS_TABLE_NAME,
-                Key: { taskId },
-                UpdateExpression: "set #status = :status, updatedAt = :updatedAt",
-                ExpressionAttributeNames: { "#status": "status" }, // Alias for reserved keyword
-                ExpressionAttributeValues: {
-                    ":status": "Processing",
-                    ":updatedAt": new Date().toISOString(),
-                },
-                ReturnValues: "UPDATED_NEW", // Optional: return updated values
-            };
-            console.log('Updating task status to Processing in DynamoDB:', updateParams);
-            await ddbDocClient.send(new UpdateCommand(updateParams));
-            console.log(`Task ${taskId} status updated to Processing`);
-
             // 3. Start Step Function execution
             const sfnParams = {
                 stateMachineArn: STEP_FUNCTIONS_ARN,

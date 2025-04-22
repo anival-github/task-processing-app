@@ -3,7 +3,7 @@ import { ddbDocClient } from '../utils/awsClients.js';
 import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
 const TASKS_TABLE_NAME = process.env.TASKS_TABLE_NAME;
-const FAILURE_RATE = 1.0; // Temporarily set to 100% failure rate for testing
+const FAILURE_RATE = 0.3; // 30% failure rate
 
 export const handler = async (event) => {
     // Input from Step Function includes TaskInput and RetryCount
