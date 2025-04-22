@@ -13,8 +13,8 @@ export const handler = async (event) => {
     let requestBody;
     try {
         requestBody = JSON.parse(event.body);
-        if (!requestBody || typeof requestBody.answer !== 'string' || requestBody.answer.trim() === '') {
-            throw new Error('Invalid input: Missing or empty answer field.');
+        if (!requestBody || typeof requestBody.answer !== 'string' || requestBody.answer.trim() === '' || typeof requestBody.taskId !== 'string' || requestBody.taskId.trim() === '') {
+            throw new Error('Invalid input: Missing or empty answer or taskId field.');
         }
     } catch (error) {
         console.error('Invalid request body:', error);
@@ -25,12 +25,13 @@ export const handler = async (event) => {
         };
     }
 
-    const taskId = randomUUID();
+    // Use the taskId provided by the frontend
+    const taskId = requestBody.taskId;
     const timestamp = new Date().toISOString();
     const taskItem = {
-        taskId: taskId,
+        taskId: taskId, // Use provided taskId
         answer: requestBody.answer.trim(),
-        status: 'Pending', 
+        status: 'Pending',
         retries: 0,
         createdAt: timestamp,
         updatedAt: timestamp,
@@ -51,7 +52,7 @@ export const handler = async (event) => {
         // 2. Send message to SQS
         const sqsParams = {
             QueueUrl: TASK_QUEUE_URL,
-            MessageBody: JSON.stringify({ taskId: taskId }) // Only need taskId in queue message
+            MessageBody: JSON.stringify({ taskId: taskId }) // Send provided taskId
         };
         console.log('Sending message to SQS:', sqsParams);
         await sqsClient.send(new SendMessageCommand(sqsParams));

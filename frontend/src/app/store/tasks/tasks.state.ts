@@ -112,7 +112,10 @@ export class TasksState {
   updateTaskStatus(ctx: StateContext<TasksStateModel>, action: UpdateTaskStatus) {
     ctx.setState(
       patch({
-        tasks: updateItem<Task>(task => task?.taskId === action.payload.taskId, action.payload)
+        tasks: updateItem<Task>(
+          task => task?.taskId === action.payload.taskId,
+          existingTask => ({ ...existingTask, ...action.payload })
+        )
       })
     );
   }
