@@ -19,9 +19,16 @@ export const handler = async (event) => {
         const data = await ddbDocClient.send(new ScanCommand(params));
         console.log('Scan successful. Items count:', data.Items?.length || 0);
 
+        // Sort items by createdAt ascending (oldest first, latest last)
+        const sortedItems = (data.Items || []).sort((a, b) => {
+            if (a.createdAt < b.createdAt) return -1;
+            if (a.createdAt > b.createdAt) return 1;
+            return 0;
+        });
+
         return {
             statusCode: 200,
-            body: JSON.stringify(data.Items || []),
+            body: JSON.stringify(sortedItems),
             headers: { 
                 'Content-Type': 'application/json',
                 // Add CORS headers if not handled by API Gateway integration

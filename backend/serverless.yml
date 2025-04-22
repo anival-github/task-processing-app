@@ -116,12 +116,6 @@ functions:
           arn: { Fn::GetAtt: [TasksTable, StreamArn] }
           batchSize: 1
           startingPosition: LATEST
-          filterPatterns:
-            - eventName: [MODIFY]
-              dynamodb:
-                  NewImage:
-                    status:
-                      S: [Processed, Failed]
 
   handleFailureLambda: # Invoked by Step Function Catch
     handler: src/handlers/handleFailure.handler
@@ -173,46 +167,60 @@ resources:
       Type: AWS::StepFunctions::StateMachine
       Properties:
         StateMachineName: ${sls:stage}-TaskProcessingStateMachine
-        DefinitionString: |
-          {
-            "Comment": "Task Processing State Machine",
-            "StartAt": "ProcessTask",
-            "States": {
-              "ProcessTask": {
-                "Type": "Task",
-                "Resource": "${self:custom.processTaskLambdaArn}",
-                "Parameters": { 
-                  "TaskInput.$": "$", 
-                  "RetryCount.$": "$$.State.RetryCount" 
-                },
-                "Retry": [
-                  {
-                    "ErrorEquals": ["States.ALL"],
-                    "IntervalSeconds": 3,
-                    "MaxAttempts": 3, 
-                    "BackoffRate": 2.0
-                  }
-                ],
-                "Catch": [
-                  {
-                    "ErrorEquals": ["States.ALL"],
-                    "ResultPath": "$.errorInfo", 
-                    "Next": "HandleFailureState"
-                  }
-                ],
-                "End": true
-              },
-              "HandleFailureState": {
-                  "Type": "Task",
-                  "Resource": "${self:custom.handleFailureLambdaArn}",
-                  "Parameters": {
+        DefinitionString:
+          Fn::Sub:
+            - |
+              {
+                "Comment": "Task Processing State Machine",
+                "StartAt": "ProcessTask",
+                "States": {
+                  "ProcessTask": {
+                    "Type": "Task",
+                    "Resource": "${ProcessTaskLambdaArn}",
+                    "Parameters": {
                       "TaskInput.$": "$",
-                      "ErrorInfo.$": "$.errorInfo"
+                      "RetryCount.$": "$$.State.RetryCount"
+                    },
+                    "Retry": [
+                      {
+                        "ErrorEquals": ["States.ALL"],
+                        "IntervalSeconds": 3,
+                        "MaxAttempts": 2,
+                        "BackoffRate": 2.0
+                      }
+                    ],
+                    "Catch": [
+                      {
+                        "ErrorEquals": ["States.ALL"],
+                        "ResultPath": "$.errorInfo",
+                        "Next": "HandleFailureState"
+                      }
+                    ],
+                    "End": true
                   },
-                  "End": true
+                  "HandleFailureState": {
+                      "Type": "Task",
+                      "Resource": "${HandleFailureLambdaArn}",
+                      "ResultPath": "$.handleFailureOutput",
+                      "Next": "SendFailureToDLQ"
+                  },
+                  "SendFailureToDLQ": {
+                      "Type": "Task",
+                      "Resource": "arn:aws:states:::sqs:sendMessage",
+                      "Parameters": {
+                          "QueueUrl": "${TaskDLQUrl}", 
+                          "MessageBody.$": "$.handleFailureOutput"
+                      },
+                      "End": true
+                  }
+                }
               }
-            }
-          }
+            # Provide values for the placeholders used in Fn::Sub
+            - ProcessTaskLambdaArn: ${self:custom.processTaskLambdaArn}
+              HandleFailureLambdaArn: ${self:custom.handleFailureLambdaArn}
+              # Add substitution for the DLQ URL using Ref
+              TaskDLQUrl: { Ref: TaskDLQ }
+              
         RoleArn: { Fn::GetAtt: [StateMachineExecutionRole, Arn] }
 
     StateMachineExecutionRole:
@@ -235,6 +243,9 @@ resources:
                   Resource:
                     - "${self:custom.processTaskLambdaArn}"
                     - "${self:custom.handleFailureLambdaArn}"
+                - Effect: Allow
+                  Action: sqs:SendMessage
+                  Resource: { Fn::GetAtt: [TaskDLQ, Arn] }
 
     # Role for API Gateway to invoke Lambda functions - Still needed
     TaskProcessingApiGatewayIntegrationRole:

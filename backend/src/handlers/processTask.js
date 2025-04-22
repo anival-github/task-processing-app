@@ -3,7 +3,7 @@ import { ddbDocClient } from '../utils/awsClients.js';
 import { UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
 const TASKS_TABLE_NAME = process.env.TASKS_TABLE_NAME;
-const FAILURE_RATE = 0.30; // 30% failure rate
+const FAILURE_RATE = 1.0; // Temporarily set to 100% failure rate for testing
 
 export const handler = async (event) => {
     // Input from Step Function includes TaskInput and RetryCount
@@ -15,6 +15,30 @@ export const handler = async (event) => {
     if (!taskId) {
         throw new Error('Missing taskId in Step Function input.TaskInput');
     }
+
+    // --- Update retry count in DB at the start of each attempt (if retryCount > 0) ---
+    if (retryCount > 0) {
+        console.log(`Attempt #${retryCount + 1} for task ${taskId}. Updating retry count in DB.`);
+        const retryUpdateParams = {
+            TableName: TASKS_TABLE_NAME,
+            Key: { taskId },
+            UpdateExpression: "set retries = :retries, updatedAt = :updatedAt",
+            ExpressionAttributeValues: {
+                ":retries": retryCount,
+                ":updatedAt": new Date().toISOString(),
+            },
+            ReturnValues: "NONE", // Don't need return values here
+        };
+        try {
+            await ddbDocClient.send(new UpdateCommand(retryUpdateParams));
+            console.log(`Successfully updated retry count to ${retryCount} for task ${taskId}.`);
+        } catch (dbError) {
+            console.error(`Failed to update retry count for task ${taskId} before processing:`, dbError);
+            // Throw error to potentially trigger SFN retry for the DB update failure itself
+            throw new Error(`Failed to update retry count in DB: ${dbError.message}`);
+        }
+    }
+    // --- End retry count update ---
 
     console.log(`Processing task: ${taskId}, Answer: ${taskInput.answer}, Attempt: ${retryCount + 1}`);
 
@@ -30,7 +54,7 @@ export const handler = async (event) => {
 
         // If successful, update DynamoDB status to Processed and set retries
         console.log(`Processing successful for task: ${taskId}, Attempt: ${retryCount + 1}`);
-        const updateParams = {
+        const successUpdateParams = {
             TableName: TASKS_TABLE_NAME,
             Key: { taskId },
             UpdateExpression: "set #status = :status, updatedAt = :updatedAt, errorMessage = :errMsg, retries = :retries",
@@ -43,8 +67,8 @@ export const handler = async (event) => {
             },
             ReturnValues: "UPDATED_NEW",
         };
-        console.log('Updating task status to Processed in DynamoDB:', updateParams);
-        await ddbDocClient.send(new UpdateCommand(updateParams));
+        console.log('Updating task status to Processed in DynamoDB:', successUpdateParams);
+        await ddbDocClient.send(new UpdateCommand(successUpdateParams));
         console.log(`Task ${taskId} status updated to Processed`);
 
         // Return result to Step Function (optional)
@@ -56,8 +80,13 @@ export const handler = async (event) => {
     } catch (error) {
         console.error(`Error during processing task ${taskId}:`, error);
         // Re-throw the error to let Step Functions handle retries/catch
-        // The error message might be passed to the Catch state
-        error.message = `Processing task ${taskId} failed: ${error.message}`; 
+        if (!(error instanceof Error)) { // Ensure it's an Error object
+             error = new Error(String(error));
+        }
+        // Avoid modifying original message if it's the DB update error
+        if (!error.message.startsWith('Failed to update retry count')) {
+             error.message = `Processing task ${taskId} failed: ${error.message}`;
+        } 
         throw error;
     }
 };
