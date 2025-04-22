@@ -181,18 +181,22 @@ resources:
               "ProcessTask": {
                 "Type": "Task",
                 "Resource": "${self:custom.processTaskLambdaArn}",
+                "Parameters": { 
+                  "TaskInput.$": "$", 
+                  "RetryCount.$": "$$.State.RetryCount" 
+                },
                 "Retry": [
                   {
                     "ErrorEquals": ["States.ALL"],
                     "IntervalSeconds": 3,
-                    "MaxAttempts": 2,
+                    "MaxAttempts": 3, 
                     "BackoffRate": 2.0
                   }
                 ],
                 "Catch": [
                   {
                     "ErrorEquals": ["States.ALL"],
-                    "ResultPath": "$.errorInfo",
+                    "ResultPath": "$.errorInfo", 
                     "Next": "HandleFailureState"
                   }
                 ],

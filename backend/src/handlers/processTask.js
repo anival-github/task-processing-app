@@ -6,16 +6,17 @@ const TASKS_TABLE_NAME = process.env.TASKS_TABLE_NAME;
 const FAILURE_RATE = 0.30; // 30% failure rate
 
 export const handler = async (event) => {
-    // Input from Step Function is the task item
+    // Input from Step Function includes TaskInput and RetryCount
     console.log('Received event from Step Function:', JSON.stringify(event, null, 2));
-    const taskItem = event; // Input is the state itself (the task item)
-    const taskId = taskItem.taskId;
+    const taskInput = event.TaskInput; 
+    const retryCount = event.RetryCount || 0; // Default to 0 if not present
+    const taskId = taskInput?.taskId;
 
     if (!taskId) {
-        throw new Error('Missing taskId in Step Function input');
+        throw new Error('Missing taskId in Step Function input.TaskInput');
     }
 
-    console.log(`Processing task: ${taskId}, Answer: ${taskItem.answer}`);
+    console.log(`Processing task: ${taskId}, Answer: ${taskInput.answer}, Attempt: ${retryCount + 1}`);
 
     try {
         // Simulate processing based on answer or other logic
@@ -23,22 +24,22 @@ export const handler = async (event) => {
 
         // Simulate random failure
         if (Math.random() < FAILURE_RATE) {
-            console.warn(`Simulating processing failure for task: ${taskId}`);
-            // Throw a specific error type if needed for Step Function error handling
-            throw new Error('Simulated Processing Failure'); 
+            console.warn(`Simulating processing failure for task: ${taskId}, Attempt: ${retryCount + 1}`);
+            throw new Error('Simulated Processing Failure');
         }
 
-        // If successful, update DynamoDB status to Processed
-        console.log(`Processing successful for task: ${taskId}`);
+        // If successful, update DynamoDB status to Processed and set retries
+        console.log(`Processing successful for task: ${taskId}, Attempt: ${retryCount + 1}`);
         const updateParams = {
             TableName: TASKS_TABLE_NAME,
             Key: { taskId },
-            UpdateExpression: "set #status = :status, updatedAt = :updatedAt, errorMessage = :errMsg",
+            UpdateExpression: "set #status = :status, updatedAt = :updatedAt, errorMessage = :errMsg, retries = :retries",
             ExpressionAttributeNames: { "#status": "status" },
             ExpressionAttributeValues: {
                 ":status": "Processed",
                 ":updatedAt": new Date().toISOString(),
-                ":errMsg": null // Clear any previous error message
+                ":errMsg": null, // Clear any previous error message
+                ":retries": retryCount // Record the retry count for this successful attempt
             },
             ReturnValues: "UPDATED_NEW",
         };
