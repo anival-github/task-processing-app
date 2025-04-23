@@ -20,13 +20,8 @@ import { TasksState } from './store/tasks/tasks.state';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HeaderComponent,
     TaskFormComponent,
-    TaskDashboardComponent,
     HomeComponent,
-    TaskPageComponent,
-    DashboardPageComponent
   ],
   imports: [
     BrowserModule,
@@ -34,6 +29,11 @@ import { TasksState } from './store/tasks/tasks.state';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    AppComponent,
+    HeaderComponent,
+    TaskDashboardComponent,
+    TaskPageComponent,
+    DashboardPageComponent,
     NgxsModule.forRoot([TasksState], {
       developmentMode: !environment.production
     }),
