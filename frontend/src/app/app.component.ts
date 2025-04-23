@@ -4,7 +4,7 @@ import { FetchTasks } from './store/tasks/tasks.actions';
 import { WebSocketService } from './services/websocket.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -19,13 +19,21 @@ import { RouterModule } from '@angular/router';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'frontend';
   private wsStatusSubscription?: Subscription;
+  private readonly mobileBreakpoint = 768;
 
   constructor(
     private store: Store,
-    private webSocketService: WebSocketService
+    private webSocketService: WebSocketService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+    if (window.innerWidth < this.mobileBreakpoint) {
+      this.router.navigate(['/task']);
+    } else {
+      this.router.navigate(['/']);
+    }
+
     this.store.dispatch(new FetchTasks());
     this.webSocketService.connect();
 
