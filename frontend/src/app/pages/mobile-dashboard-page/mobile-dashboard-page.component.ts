@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MenuComponent } from '../menu/menu.component';
+import { MenuComponent } from '../../components/menu/menu.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { TaskDashboardComponent } from '../task-dashboard/task-dashboard.component';
+import { TaskDashboardComponent } from '../../components/task-dashboard/task-dashboard.component';
 import { Task, TaskStatus } from '../../models/task.model';
 import { Observable } from 'rxjs';
-import { LogoContainerComponent } from '../logo-container/logo-container.component';
+import { LogoContainerComponent } from '../../components/logo-container/logo-container.component';
 import { Select, Store } from '@ngxs/store';
 import { TasksState } from '../../store/tasks/tasks.state';
 import { FetchTasks } from '../../store/tasks/tasks.actions';
 
 @Component({
-  selector: 'app-dashboard-page',
+  selector: 'app-mobile-dashboard-page',
   standalone: true,
   imports: [
     CommonModule,
@@ -22,10 +22,10 @@ import { FetchTasks } from '../../store/tasks/tasks.actions';
     TaskDashboardComponent,
     LogoContainerComponent
   ],
-  templateUrl: './dashboard-page.component.html',
-  styleUrls: ['./dashboard-page.component.scss']
+  templateUrl: './mobile-dashboard-page.component.html',
+  styleUrls: ['./mobile-dashboard-page.component.scss']
 })
-export class DashboardPageComponent implements OnInit {
+export class MobileDashboardPageComponent implements OnInit {
   isMenuOpen: boolean = false;
   
   @Select(TasksState.getTasks) tasks$!: Observable<Task[]>;

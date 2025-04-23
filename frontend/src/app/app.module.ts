@@ -12,16 +12,16 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { TaskFormComponent } from './components/task-form/task-form.component';
 import { TaskDashboardComponent } from './components/task-dashboard/task-dashboard.component';
-import { HomeComponent } from './components/home/home.component';
-import { TaskPageComponent } from './components/task-page/task-page.component';
-import { DashboardPageComponent } from './components/dashboard-page/dashboard-page.component';
+import { DesktopLayoutComponent } from './pages/desktop-layout/desktop-layout.component';
+import { MobileTaskPageComponent } from './pages/mobile-task-page/mobile-task-page.component';
+import { MobileDashboardPageComponent } from './pages/mobile-dashboard-page/mobile-dashboard-page.component';
 import { environment } from '../environments/environment';
 import { TasksState } from './store/tasks/tasks.state';
 
 @NgModule({
   declarations: [
     TaskFormComponent,
-    HomeComponent,
+    DesktopLayoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,8 +32,8 @@ import { TasksState } from './store/tasks/tasks.state';
     AppComponent,
     HeaderComponent,
     TaskDashboardComponent,
-    TaskPageComponent,
-    DashboardPageComponent,
+    MobileTaskPageComponent,
+    MobileDashboardPageComponent,
     NgxsModule.forRoot([TasksState], {
       developmentMode: !environment.production
     }),

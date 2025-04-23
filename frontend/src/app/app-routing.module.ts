@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { TaskPageComponent } from './components/task-page/task-page.component';
-import { DashboardPageComponent } from './components/dashboard-page/dashboard-page.component';
+import { DesktopLayoutComponent } from './pages/desktop-layout/desktop-layout.component';
+import { MobileTaskPageComponent } from './pages/mobile-task-page/mobile-task-page.component';
+import { MobileDashboardPageComponent } from './pages/mobile-dashboard-page/mobile-dashboard-page.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'task', component: TaskPageComponent },
-  { path: 'dashboard', component: DashboardPageComponent }
+  { path: '', component: DesktopLayoutComponent },
+  { path: 'task', component: MobileTaskPageComponent },
+  { path: 'dashboard', component: MobileDashboardPageComponent }
 ];
 
 @NgModule({
