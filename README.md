@@ -71,15 +71,13 @@ See [docs/architecture.md](docs/architecture.md) for details on the system archi
 
 You will be able to interact with the frontend application to check all its features. 
 
-In order to test mobile view, you need to open developer tools in the browser, and set the device you want to test, or manually adjust the screen. 
+In order to test mobile view, you need to open developer tools in the browser, and set the device you want to test, or manually adjust the screen size. 
 
 ## Assumptions and Challenges
 
 ### Assumptions
-
     - User opens the page on a particular device. That is why the screen size is captured once when the page is opened. 
 
 ### Challenges
-
     - There is a space to improve reusability for the frontend components, which would require additional effort. 
  
