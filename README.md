@@ -56,7 +56,7 @@ See [docs/architecture.md](docs/architecture.md) for details on the system archi
       ```bash
       npm install
       ```
-    - Configure the backend endpoints in `frontend/src/environments/environment.ts` (and potentially `environment.prod.ts` for production builds) using the URLs from the backend deployment:
+    - Configure the backend endpoints in `frontend/src/environments/environment.ts` using the URLs from the backend deployment:
       - Set `apiUrl` 
       - Set `wsUrl`
     
