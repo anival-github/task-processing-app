@@ -10,7 +10,17 @@
     <img src="assets/icons/menu-burger.svg" (click)="toggleMenu()" alt="menu-burger">
   </div>
 
-  <div class="dashboard-content">
+  <!-- Loader -->
+  <div class="loader-container" *ngIf="loading$ | async">
+
+    <div class="loader-box">
+      <img src="/assets/icons/loader.svg" alt="Loading..." class="loader-svg">
+    </div>
+  </div>
+
+  <!-- Content (Task List) -->
+  <div class="dashboard-content" *ngIf="!(loading$ | async)">
+
     <div class="task-list">
       <div class="task-item" *ngFor="let task of tasks$ | async">
         <div class="task-item-content">
