@@ -1,43 +1,43 @@
 :host {
   display: block;
-  height: 100%; /* Ensure host can take full height */
+  height: 100%;
 }
 
 .task-form-container {
   display: flex;
   flex-direction: column;
   border-radius: 8px;
-  overflow: hidden; /* Ensure border radius clips content */
-  height: 100%; /* Make container fill host height */
+  overflow: hidden;
+  height: 100%;
 }
 
 .form-content {
-  flex-grow: 1; /* Make this section take available vertical space */
+  flex-grow: 1;
   overflow-y: auto;
-  padding: 0 20px 20px; /* Add horizontal and bottom padding */
-  display: flex; /* Use flex to control children */
-  flex-direction: column; /* Stack children vertically */
-  gap: 20px; /* Gap between question and answer sections (from node 2:3538) */
+  padding: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .question-section,
 .answer-section {
-  background-color: #FFFFFF; /* fill_1662GK */
-  box-shadow: 0px 8px 24px 0px rgba(51, 57, 105, 0.08), 0px -1px 2px 0px rgba(51, 57, 105, 0.09); /* effect_7L9QQY / effect_XNYQUG */
-  border-radius: 8px; /* From nodes 2:1605 & 2:1611 */
-  width: 100%; /* Explicitly take full width of parent */
+  background-color: #FFFFFF;
+  box-shadow: 0px 8px 24px 0px rgba(51, 57, 105, 0.08), 0px -1px 2px 0px rgba(51, 57, 105, 0.09);
+  border-radius: 8px;
+  width: 100%;
 }
 
 .question-section {
-  padding: 60px; /* Internal padding from node 2:1605 */
+  padding: 60px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center content */
+  align-items: center;
   justify-content: center;
-  text-align: left; /* Align text left within the centered block */
+  text-align: left;
   gap: 20px;
-  height: 320px; /* Fixed height from Figma node 2:1605 */
-  flex-shrink: 0; /* Prevent shrinking */
+  height: 320px;
+  flex-shrink: 0;
 }
 
 .question-label {
@@ -47,8 +47,8 @@
   line-height: 1.6;
   letter-spacing: 0.0075em;
   text-transform: uppercase;
-  color: #5061D0; /* fill_FZ6FYL */
-  align-self: flex-start; /* Align label to the start */
+  color: #5061D0;
+  align-self: flex-start;
 }
 
 .question-text {
@@ -56,48 +56,46 @@
   font-weight: 400;
   font-size: 20px;
   line-height: 1.5;
-  color: #5B5C6A; /* fill_IUQRJI */
-  max-width: 500px; /* Ensure text wraps within the section */
+  color: #5B5C6A;
+  max-width: 500px;
 }
 
 .answer-section {
-  padding: 60px; /* Internal padding from node 2:1611 */
+  padding: 60px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  flex-grow: 1; /* Fill remaining vertical space in .form-content */
+  flex-grow: 1;
 }
 
 .answer-label {
-  /* Same style as question-label */
   font-family: 'Lato', sans-serif;
   font-weight: 700;
   font-size: 20px;
   line-height: 1.6;
   letter-spacing: 0.0075em;
   text-transform: uppercase;
-  color: #5061D0; /* fill_8CRK1J */
+  color: #5061D0;
 }
 
 .text-field-container {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  flex-grow: 1; /* Make container expand vertically within answer-section */
+  flex-grow: 1;
 }
 
 .text-area {
   width: 100%;
-  /* min-height: 150px; -> Remove min-height, let flexbox control height */
-  flex-grow: 1; /* Make text area expand vertically within its container */
+  flex-grow: 1;
   padding: 12px 16px;
-  border: 1px solid #E0E1E5; /* stroke_AYGHAV */
+  border: 1px solid #E0E1E5;
   border-radius: 8px;
   font-family: 'Lato', sans-serif;
   font-size: 14px;
   line-height: 1.43;
   letter-spacing: 0.0107em;
-  color: #292830; /* Default text color */
+  color: #292830;
   resize: none;
 
   &::placeholder {
@@ -106,7 +104,7 @@
     font-size: 14px;
     line-height: 1.43;
     letter-spacing: 0.0107em;
-    color: #838598; /* fill_OBT5BO */
+    color: #838598;
   }
 }
 
@@ -116,15 +114,15 @@
   font-size: 12px;
   line-height: 1.4;
   letter-spacing: 0.0167em;
-  color: #5B5C6A; /* fill_RXUIY1 */
+  color: #5B5C6A;
   align-self: center;
   text-align: center;
 }
 
 .footer-section {
   padding: 16px 40px;
-  background-color: #FFFFFF; /* fill_DZT6IA */
-  box-shadow: 0px -1px 2px 0px rgba(51, 57, 105, 0.09); /* From parent effect */
+  background-color: #FFFFFF;
+  box-shadow: 0px -1px 2px 0px rgba(51, 57, 105, 0.09);
   display: flex;
   justify-content: flex-end;
 }
@@ -133,8 +131,8 @@
   padding: 8px 16px;
   width: 160px;
   height: 36px;
-  background-color: #5061D0; /* fill_FZ6FYL */
-  color: #FFFFFF; /* fill_DZT6IA */
+  background-color: #5061D0;
+  color: #FFFFFF;
   border: none;
   border-radius: 8px;
   font-family: 'Lato', sans-serif;

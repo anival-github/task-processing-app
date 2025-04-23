@@ -31,7 +31,6 @@ export class TaskDashboardComponent {
     this.store.dispatch(new FetchTasks());
   }
 
-  // Helper function to dynamically set badge class
   getStatusClass(status: TaskStatus): string {
     switch (status) {
       case 'Processed': return 'badge-processed';
@@ -41,7 +40,6 @@ export class TaskDashboardComponent {
     }
   }
 
-  // Helper function to dynamically set icon
   getStatusIcon(status: TaskStatus): string {
     switch (status) {
       case 'Processed': return 'assets/icons/check-circle.svg';

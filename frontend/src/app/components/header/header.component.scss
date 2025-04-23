@@ -1,23 +1,19 @@
 :host {
   display: block;
-  /* margin-bottom: 20px; -> Handled by parent gap */
   padding: 0 20px;
   width: 100%;
 }
 
 .app-header {
-  // margin-top: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
   padding: 10px 24px;
-  background-color: #FFFFFF; /* fill_DZT6IA */
+  background-color: #FFFFFF;
   border-radius: 8px;
-  box-shadow: 0px 8px 24px 0px rgba(51, 57, 105, 0.08), 0px -1px 2px 0px rgba(51, 57, 105, 0.09); /* effect_DVM2W3 */
-  height: 40px; /* Fixed height from Figma */
-  /* max-width: 620px; -> Width determined by parent */
-  /* margin: 0 auto; -> Centering handled by parent */
+  box-shadow: 0px 8px 24px 0px rgba(51, 57, 105, 0.08), 0px -1px 2px 0px rgba(51, 57, 105, 0.09);
+  height: 40px;
 }
 .left-section {
   display: flex;
@@ -29,29 +25,27 @@
 .logo-container {
   display: flex;
   align-items: center;
-  /* height: 100%; */ /* Needs adjustment based on actual logo rendering */
 
   .logo-part {
-    max-height: 20px; /* Adjust as needed */
+    max-height: 20px;
     width: auto;
-    /* Spacing/positioning needs refinement */
   }
 }
 
 .divider {
   width: 1px;
-  height: 100%; /* Fill header height */
-  background-color: #E0E1E5; /* fill_0084BV */
-  margin: 0 12px; /* Space around divider */
+  height: 100%;
+  background-color: #E0E1E5;
+  margin: 0 12px;
 }
 
 .title {
   font-family: 'Lato', sans-serif;
   font-weight: 400;
   font-size: 14px;
-  line-height: 1.43; /* Approximation of 1.429999896458217em */
-  letter-spacing: 0.0107em; /* Approximation of 1.0714286140033178% */
-  color: #292830; /* fill_DF3XMO */
+  line-height: 1.43;
+  letter-spacing: 0.0107em;
+  color: #292830;
 }
 
 .menu-button-container {

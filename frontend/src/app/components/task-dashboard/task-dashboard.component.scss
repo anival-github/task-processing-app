@@ -1,25 +1,25 @@
 :host {
   display: block;
-  background-color: #FBFAFD; /* fill_3OUX2G */
+  background-color: #FBFAFD;
   border-radius: 8px;
   padding: 20px;
-  width: 100%; /* Take available width */
-  max-width: 1100px; /* Figma max width */
+  width: 100%;
+  max-width: 1100px;
 }
 
 .dashboard-container {
-  background-color: #FFFFFF; /* fill_DZT6IA */
-  border: 1px solid #E0E1E5; /* stroke_GKA6BM */
+  background-color: #FFFFFF;
+  border: 1px solid #E0E1E5;
   border-radius: 8px;
-  overflow-x: auto; /* Allow horizontal scrolling if needed */
-  max-height: 960px; /* Figma height */
+  overflow-x: auto;
+  max-height: 960px;
   overflow-y: auto;
 }
 
 .task-table {
   width: 100%;
   border-collapse: collapse;
-  color: #292830; /* fill_DF3XMO */
+  color: #292830;
   font-family: 'Lato', sans-serif;
   font-weight: 400;
   font-size: 14px;
@@ -29,27 +29,26 @@
   th, td {
     padding: 16px;
     text-align: left;
-    border-bottom: 1px solid #E0E1E5; /* stroke_CPP6XM */
+    border-bottom: 1px solid #E0E1E5;
     vertical-align: middle;
   }
 
   thead tr {
-    background-color: #F9F9F9; /* fill_U3CYXS */
+    background-color: #F9F9F9;
   }
 
   th {
-    font-weight: 400; /* Figma uses regular weight */
+    font-weight: 400;
   }
 
-  /* Column widths based on Figma */
   th:nth-child(1), td:nth-child(1) { width: 100px; }
   th:nth-child(3), td:nth-child(3) { width: 200px; }
   th:nth-child(4), td:nth-child(4) { width: 100px; }
-  th:nth-child(2), td:nth-child(2) { width: auto; } /* Answer column flexible */
-  th:nth-child(5), td:nth-child(5) { width: auto; } /* Error message flexible */
+  th:nth-child(2), td:nth-child(2) { width: auto; }
+  th:nth-child(5), td:nth-child(5) { width: auto; }
 
   .answer-cell {
-    max-width: 300px; /* Limit width to prevent excessive stretching */
+    max-width: 300px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -80,10 +79,10 @@
   font-size: 14px;
   line-height: 1.52;
   letter-spacing: 0.0071em;
-  color: #838598; /* fill_7T3TUC */
+  color: #838598;
 
   img {
-    width: 16px; /* Adjust size as needed */
+    width: 16px;
     height: 16px;
   }
 
@@ -100,17 +99,17 @@
   font-size: 14px;
   line-height: 1.43;
   letter-spacing: 0.0107em;
-  gap: 8px; /* Gap between icon and text */
+  gap: 8px;
 
   img {
-    width: 14px; /* Adjust icon size */
+    width: 14px;
     height: 14px;
   }
 }
 
 .badge-processed {
-  background-color: #EBF7EA; /* fill_BSWFO0 */
-  color: #2F8F2E; /* fill_G2D2W3 */
+  background-color: #EBF7EA;
+  color: #2F8F2E;
   width: 100%;
   display: flex;
   align-items: center;
@@ -118,9 +117,9 @@
 }
 
 .badge-failed {
-  background-color: #FCECE9; /* fill_U2N27J */
-  color: #BD3827; /* fill_P03THU */
-  gap: 4px; /* Figma specified smaller gap */
+  background-color: #FCECE9;
+  color: #BD3827;
+  gap: 4px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -128,40 +127,26 @@
 }
 
 .badge-pending {
-  background-color: #E9F6FC; /* fill_OHK76P */
-  color: #2687BE; /* fill_QNCYW3 */
+  background-color: #E9F6FC;
+  color: #2687BE;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-// Loader styles
 .loader-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;  // Ensure it takes full width of host
-  height: 100%; // Ensure it takes full height of host (host needs defined height or ability to grow)
+  width: 100%;
+  height: 100%;
 }
 
-/* Removed old .loader styles
-.loader {
-  border: 14px solid #E0E1E5; // Figma background stroke color and weight
-  border-top-color: #5061D0; // Figma gradient end color for the spinning part
-  border-radius: 50%;
-  width: 70px; // Increased size
-  height: 70px; // Increased size
-  animation: spin 1s linear infinite;
-  margin-bottom: 15px; // Space between spinner and text
-}
-*/
-
-// Styles for the SVG loader
 .loader-svg {
-  width: 100px; // Updated size
-  height: 100px; // Updated size
+  width: 100px;
+  height: 100px;
   animation: spin 1s linear infinite;
 }
 
@@ -169,14 +154,6 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-
-// Optional: Style the loading text - Removed as text is gone
-/*
-.loader-container p {
-  color: #555;
-  font-size: 1em;
-}
-*/
 
 .dashboard-grid {
   display: grid;
