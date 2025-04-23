@@ -4,7 +4,9 @@
 }
 
 .app-header {
+  // margin-top: 20px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 12px;
   padding: 10px 24px;
@@ -14,6 +16,12 @@
   height: 40px; /* Fixed height from Figma */
   /* max-width: 620px; -> Width determined by parent */
   /* margin: 0 auto; -> Centering handled by parent */
+}
+.left-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-start;
 }
 
 .logo-container {
@@ -42,4 +50,12 @@
   line-height: 1.43; /* Approximation of 1.429999896458217em */
   letter-spacing: 0.0107em; /* Approximation of 1.0714286140033178% */
   color: #292830; /* fill_DF3XMO */
+}
+
+.menu-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
 }

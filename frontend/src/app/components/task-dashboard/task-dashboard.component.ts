@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { Task, TaskStatus } from '../../models/task.model';
@@ -7,6 +11,13 @@ import { FetchTasks } from '../../store/tasks/tasks.actions';
 
 @Component({
   selector: 'app-task-dashboard',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule
+  ],
   templateUrl: './task-dashboard.component.html',
   styleUrls: ['./task-dashboard.component.scss']
 })

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxsModule } from '@ngxs/store';
@@ -12,6 +13,8 @@ import { HeaderComponent } from './components/header/header.component';
 import { TaskFormComponent } from './components/task-form/task-form.component';
 import { TaskDashboardComponent } from './components/task-dashboard/task-dashboard.component';
 import { HomeComponent } from './components/home/home.component';
+import { TaskPageComponent } from './components/task-page/task-page.component';
+import { DashboardPageComponent } from './components/dashboard-page/dashboard-page.component';
 import { environment } from '../environments/environment';
 import { TasksState } from './store/tasks/tasks.state';
 
@@ -21,10 +24,13 @@ import { TasksState } from './store/tasks/tasks.state';
     HeaderComponent,
     TaskFormComponent,
     TaskDashboardComponent,
-    HomeComponent
+    HomeComponent,
+    TaskPageComponent,
+    DashboardPageComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,

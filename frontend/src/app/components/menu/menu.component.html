@@ -1,0 +1,27 @@
+<div class="menu-container" *ngIf="isOpen">
+  <div class="backdrop" [@fadeInOut] (click)="onClose()"></div>
+  <div class="menu" [@slideUpDown]>
+    <div class="menu-content">
+      <div class="menu-header">
+        <span class="menu-title">Menu</span>
+        <button class="close-button" (click)="onClose()">
+          <img src="assets/icons/close.svg" alt="close" class="mat-icon">
+        </button>
+      </div>
+      <div class="menu-items">
+        <a routerLink="/task" routerLinkActive="active" (click)="onClose()" class="menu-item">
+  
+          <img src="assets/icons/list.svg" alt="task" class="mat-icon">
+
+          <span>Task Page</span>
+        </a>
+        <a routerLink="/dashboard" routerLinkActive="active" (click)="onClose()" class="menu-item">
+          
+          
+          <img src="assets/icons/cog.svg" alt="dashboard" class="mat-icon">
+          <span>Dashboard</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div> 

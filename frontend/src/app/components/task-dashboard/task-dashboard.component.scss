@@ -165,3 +165,24 @@
   font-size: 1em;
 }
 */
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  width: 100%;
+}
+
+.task-card {
+  width: 100%;
+  min-height: 200px;
+  
+  mat-card-header {
+    margin-bottom: 16px;
+  }
+  
+  mat-card-content {
+    padding: 16px;
+  }
+}

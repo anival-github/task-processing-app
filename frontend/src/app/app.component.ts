@@ -3,9 +3,16 @@ import { Store } from '@ngxs/store';
 import { FetchTasks } from './store/tasks/tasks.actions';
 import { WebSocketService } from './services/websocket.service';
 import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

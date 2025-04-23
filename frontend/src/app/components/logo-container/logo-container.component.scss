@@ -1,0 +1,13 @@
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    /* height: 100%; */ /* Needs adjustment based on actual logo rendering */
+  
+    .logo-part {
+      max-height: 20px; /* Adjust as needed */
+      width: auto;
+      /* Spacing/positioning needs refinement */
+    }
+  }
+  
