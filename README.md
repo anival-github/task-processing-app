@@ -76,8 +76,8 @@ In order to test mobile view, you need to open developer tools in the browser, a
 ## Assumptions and Challenges
 
 ### Assumptions
-    - User opens the page on a particular device. That is why the screen size is captured once when the page is opened. 
+User opens the page on a particular device. That is why the screen size is captured once when the page is opened. 
 
 ### Challenges
-    - There is a space to improve reusability for the frontend components, which would require additional effort. 
+There is a space to improve reusability for the frontend components, which would require additional effort. 
  
