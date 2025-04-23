@@ -111,17 +111,29 @@
 .badge-processed {
   background-color: #EBF7EA; /* fill_BSWFO0 */
   color: #2F8F2E; /* fill_G2D2W3 */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .badge-failed {
   background-color: #FCECE9; /* fill_U2N27J */
   color: #BD3827; /* fill_P03THU */
   gap: 4px; /* Figma specified smaller gap */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .badge-pending {
   background-color: #E9F6FC; /* fill_OHK76P */
   color: #2687BE; /* fill_QNCYW3 */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 // Loader styles
