@@ -1,57 +1,55 @@
 service: task-processing-backend
-frameworkVersion: '3' # Or your specific version
+frameworkVersion: '3'
 
 provider:
   name: aws
-  runtime: nodejs18.x # Specify Node.js version
-  region: us-east-1 # Or your preferred region
-  httpApi: # Use HTTP API for simpler setup and lower cost
-    cors: true # Enable CORS for frontend interaction
-  environment: # Environment variables available to all functions
+  runtime: nodejs18.x
+  region: us-east-1
+  httpApi:
+    cors: true
+  environment:
     TASKS_TABLE_NAME: ${self:custom.tasksTableName}
-    TASK_QUEUE_URL: { Ref: TaskQueue } # Get URL of the TaskQueue
-    TASK_DLQ_URL: { Ref: TaskDLQ }     # Get URL of the TaskDLQ
-    STEP_FUNCTIONS_ARN: { Ref: TaskProcessingStateMachine } # State machine ARN
-    # Use Ref: WebsocketsApi which references the default logical ID assigned by Serverless Framework
-    WEBSOCKET_API_ENDPOINT: 
-      Fn::Sub: 'wss://${WebsocketsApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}' 
-    MANAGEMENT_API_ENDPOINT: 
-      Fn::Sub: 'https://${WebsocketsApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}' 
+    TASK_QUEUE_URL: { Ref: TaskQueue }
+    TASK_DLQ_URL: { Ref: TaskDLQ }
+    STEP_FUNCTIONS_ARN: { Ref: TaskProcessingStateMachine }
+    WEBSOCKET_API_ENDPOINT:
+      Fn::Sub: 'wss://${WebsocketsApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}'
+    MANAGEMENT_API_ENDPOINT:
+      Fn::Sub: 'https://${WebsocketsApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}'
     CONNECTIONS_TABLE_NAME: ${self:custom.connectionsTableName}
 
   iam:
     role:
-      statements: # Permissions for all functions (can be refined per function)
-        - Effect: Allow # DynamoDB Tasks Table
+      statements:
+        - Effect: Allow
           Action: [dynamodb:Query, dynamodb:Scan, dynamodb:GetItem, dynamodb:PutItem, dynamodb:UpdateItem, dynamodb:DeleteItem]
           Resource:
             - Fn::GetAtt: [TasksTable, Arn]
-        - Effect: Allow # DynamoDB Connections Table (for WebSockets)
+        - Effect: Allow
           Action: [dynamodb:Query, dynamodb:Scan, dynamodb:GetItem, dynamodb:PutItem, dynamodb:UpdateItem, dynamodb:DeleteItem]
           Resource:
             - Fn::GetAtt: [ConnectionsTable, Arn]
-        - Effect: Allow # SQS Send/Receive/Delete
+        - Effect: Allow
           Action: [sqs:SendMessage, sqs:ReceiveMessage, sqs:DeleteMessage, sqs:GetQueueAttributes]
           Resource:
             - Fn::GetAtt: [TaskQueue, Arn]
             - Fn::GetAtt: [TaskDLQ, Arn]
-        - Effect: Allow # Step Functions Start Execution
+        - Effect: Allow
           Action: [states:StartExecution]
           Resource:
             - Ref: TaskProcessingStateMachine
-        # Use Ref: WebsocketsApi for the implicitly created API
-        - Effect: Allow # WebSocket Management
+        - Effect: Allow
           Action: [execute-api:ManageConnections]
-          Resource: 
+          Resource:
             - Fn::Sub: 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${WebsocketsApi}/*'
-        - Effect: Allow # DynamoDB Streams
+        - Effect: Allow
           Action: [dynamodb:GetRecords, dynamodb:GetShardIterator, dynamodb:DescribeStream, dynamodb:ListStreams]
           Resource:
-             Fn::GetAtt: [TasksTable, StreamArn] # Permission for the specific stream
+             Fn::GetAtt: [TasksTable, StreamArn]
 
 custom:
   tasksTableName: ${sls:stage}-tasks-table
-  connectionsTableName: ${sls:stage}-websocket-connections # Uncommented
+  connectionsTableName: ${sls:stage}-websocket-connections
   processTaskLambdaArn: arn:aws:lambda:${aws:region}:${aws:accountId}:function:${self:service}-${sls:stage}-processTaskLambda
   handleFailureLambdaArn: arn:aws:lambda:${aws:region}:${aws:accountId}:function:${self:service}-${sls:stage}-handleFailureLambda
 
@@ -75,11 +73,10 @@ functions:
     events:
       - sqs:
           arn: { Fn::GetAtt: [TaskQueue, Arn] }
-          batchSize: 1 # Process one task message at a time
+          batchSize: 1
 
-  processTaskLambda: # Invoked by Step Function
+  processTaskLambda:
     handler: src/handlers/processTask.handler
-    # No event trigger here
 
   dlqMonitorLambda:
     handler: src/handlers/dlqMonitor.handler
@@ -88,7 +85,6 @@ functions:
           arn: { Fn::GetAtt: [TaskDLQ, Arn] }
           batchSize: 1
 
-  # WebSocket Handlers - Uncommented
   connectLambda:
     handler: src/handlers/websocketConnect.handler
     events:
@@ -101,13 +97,12 @@ functions:
       - websocket:
           route: $disconnect
 
-  defaultHandlerLambda: 
+  defaultHandlerLambda:
     handler: src/handlers/websocketDefault.handler
     events:
       - websocket:
           route: $default
-  
-  # Lambda triggered by DynamoDB Stream to notify clients - Uncommented
+
   notifyClientsLambda:
     handler: src/handlers/notifyClients.handler
     events:
@@ -117,7 +112,7 @@ functions:
           batchSize: 1
           startingPosition: LATEST
 
-  handleFailureLambda: # Invoked by Step Function Catch
+  handleFailureLambda:
     handler: src/handlers/handleFailure.handler
 
 resources:
@@ -136,7 +131,6 @@ resources:
         StreamSpecification:
           StreamViewType: NEW_IMAGE
 
-    # Table to store WebSocket connection IDs - Uncommented
     ConnectionsTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -154,7 +148,6 @@ resources:
       Properties:
         QueueName: ${sls:stage}-TaskQueue
         RedrivePolicy:
-          # Use Fn::GetAtt for ARNs
           deadLetterTargetArn: { Fn::GetAtt: [TaskDLQ, Arn] }
           maxReceiveCount: 3
 
@@ -208,19 +201,17 @@ resources:
                       "Type": "Task",
                       "Resource": "arn:aws:states:::sqs:sendMessage",
                       "Parameters": {
-                          "QueueUrl": "${TaskDLQUrl}", 
+                          "QueueUrl": "${TaskDLQUrl}",
                           "MessageBody.$": "$.handleFailureOutput"
                       },
                       "End": true
                   }
                 }
               }
-            # Provide values for the placeholders used in Fn::Sub
             - ProcessTaskLambdaArn: ${self:custom.processTaskLambdaArn}
               HandleFailureLambdaArn: ${self:custom.handleFailureLambdaArn}
-              # Add substitution for the DLQ URL using Ref
               TaskDLQUrl: { Ref: TaskDLQ }
-              
+
         RoleArn: { Fn::GetAtt: [StateMachineExecutionRole, Arn] }
 
     StateMachineExecutionRole:
@@ -247,7 +238,6 @@ resources:
                   Action: sqs:SendMessage
                   Resource: { Fn::GetAtt: [TaskDLQ, Arn] }
 
-    # Role for API Gateway to invoke Lambda functions - Still needed
     TaskProcessingApiGatewayIntegrationRole:
       Type: AWS::IAM::Role
       Properties:
@@ -265,16 +255,7 @@ resources:
               Statement:
                 - Effect: Allow
                   Action: lambda:InvokeFunction
-                  Resource: # Allow invoking all relevant Lambda functions
+                  Resource:
                     - Fn::Sub: 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${self:service}-${sls:stage}-connectLambda'
                     - Fn::Sub: 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${self:service}-${sls:stage}-disconnectLambda'
                     - Fn::Sub: 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${self:service}-${sls:stage}-defaultHandlerLambda'
-
-    # The `WebsocketsApi` resource is defined in `resources.yml`
-    # The following routes, deployment, and stage are commented out for incremental deployment
-    # routes:
-    #   $connect: connectLambda
-    #   $disconnect: disconnectLambda
-    #   $default: defaultHandlerLambda
-    # deploymentId: ${self:provider.websocketsApiDeploymentId}
-    # stage: ${sls:stage} 

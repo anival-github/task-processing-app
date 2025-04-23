@@ -1,4 +1,3 @@
-// src/handlers/websocketConnect.js
 import { ddbDocClient } from '../utils/awsClients.js';
 import { PutCommand } from "@aws-sdk/lib-dynamodb";
 

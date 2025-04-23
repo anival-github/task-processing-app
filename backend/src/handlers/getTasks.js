@@ -1,4 +1,3 @@
-// src/handlers/getTasks.js
 import { ddbDocClient } from '../utils/awsClients.js';
 import { ScanCommand } from "@aws-sdk/lib-dynamodb";
 
@@ -9,9 +8,6 @@ export const handler = async (event) => {
 
     const params = {
         TableName: TASKS_TABLE_NAME,
-        // Add projection expression if you only need specific fields
-        // ProjectionExpression: "taskId, answer, #st, retries, errorMessage",
-        // ExpressionAttributeNames: { "#st": "status" }, // Alias for reserved keyword 'status'
     };
 
     try {
@@ -19,7 +15,6 @@ export const handler = async (event) => {
         const data = await ddbDocClient.send(new ScanCommand(params));
         console.log('Scan successful. Items count:', data.Items?.length || 0);
 
-        // Sort items by createdAt ascending (oldest first, latest last)
         const sortedItems = (data.Items || []).sort((a, b) => {
             if (a.createdAt < b.createdAt) return -1;
             if (a.createdAt > b.createdAt) return 1;
@@ -31,8 +26,6 @@ export const handler = async (event) => {
             body: JSON.stringify(sortedItems),
             headers: { 
                 'Content-Type': 'application/json',
-                // Add CORS headers if not handled by API Gateway integration
-                // 'Access-Control-Allow-Origin': '*',
             }
         };
     } catch (error) {

@@ -1,4 +1,3 @@
-// src/handlers/websocketDisconnect.js
 import { ddbDocClient } from '../utils/awsClients.js';
 import { DeleteCommand } from "@aws-sdk/lib-dynamodb";
 
@@ -22,7 +21,6 @@ export const handler = async (event) => {
         return { statusCode: 200, body: 'Disconnected.' };
     } catch (error) {
         console.error(`Failed to delete connectionId ${connectionId}:`, error);
-        // Don't necessarily return 500 here, as the connection is already gone
         return { statusCode: 200, body: 'Disconnect cleanup failed but connection closed.' };
     }
 };

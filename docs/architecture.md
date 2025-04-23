@@ -55,6 +55,7 @@ graph TD
     ProcessL -- Update Status (Processed) --> DDB_Tasks
     SFN -- Invoke (on Catch) --> HandleFailL
     HandleFailL -- Update Status (Failed) --> DDB_Tasks
+    HandleFailL -- Send Message (via SFN Task) --> DLQ
 
     SQS -- Failed Message (Redrive) --> DLQ
     DLQ -- Failed Message --> MonitorDLQL
@@ -81,7 +82,7 @@ graph TD
 3.  **Processing Start**: SQS triggers `startStateMachineLambda`, which fetches task details from DynamoDB and starts the Step Function execution (task remains Pending).
 4.  **Step Function Execution**: The Step Function invokes `processTaskLambda`. 
 5.  **Success**: `processTaskLambda` updates DynamoDB status to Processed.
-6.  **Failure/Retry**: If `processTaskLambda` fails (simulated 30% chance), Step Function retries based on the policy. After retries, it invokes `handleFailureLambda` via the Catch block, which updates DynamoDB status to Failed.
-7.  **DLQ Handling**: If the initial SQS processing fails repeatedly (before the Step Function starts), the message goes to the DLQ, triggering `dlqMonitorLambda` for logging.
+6.  **Failure/Retry**: If `processTaskLambda` fails (simulated 30% chance), Step Function retries based on the policy. After retries, it invokes `handleFailureLambda` via the Catch block, which updates DynamoDB status to Failed. The Step Function then explicitly sends a message containing failure details to the TaskDLQ.
+7.  **DLQ Handling**: Messages arrive in the DLQ via two paths: (a) the SQS redrive policy if initial processing via `startStateMachineLambda` fails repeatedly, or (b) explicitly sent by the Step Function after exhausting retries in the main processing flow. The DLQ triggers `dlqMonitorLambda` for logging.
 8.  **WebSocket Connection**: Frontend connects via API Gateway (WebSocket). `$connect` and `$disconnect` routes trigger Lambdas to manage connection IDs in a separate DynamoDB table.
 9.  **Real-time Updates**: DynamoDB Streams on the tasks table capture item modifications. This triggers `notifyClientsLambda`, which fetches all active connection IDs and pushes the updated task data to connected clients via the WebSocket API. 
