@@ -123,7 +123,7 @@
       line-height: 1.43;
       letter-spacing: 0.0107em;
       color: #292830; /* Default text color */
-      resize: vertical;
+      resize: none;
     
       &::placeholder {
         font-family: 'Lato', sans-serif;
@@ -140,7 +140,8 @@
       font-size: 12px;
       color: #5B5C6A;
       letter-spacing: 1.67%;
-      text-align: right;
+      text-align: center;
+      align-self: center;
     }
   }
 }
