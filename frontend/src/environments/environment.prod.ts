@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.yourdomain.com' // We'll update this with the actual production API URL later
+  apiUrl: '/api', // Example API URL for production (likely different)
+  wsUrl: 'wss://your-production-ws-url.com' // TODO: Replace with actual production WebSocket URL
 }; 

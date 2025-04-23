@@ -1,0 +1,63 @@
+<div class="dashboard-container">
+  <app-menu [isOpen]="isMenuOpen" (closeMenu)="closeMenu()"></app-menu>
+
+  <div class="header">
+    <div class="logo-section">
+      <app-logo-container></app-logo-container>
+      <div class="divider"></div>
+      <span class="title">Read aloud | Q1/3</span>
+    </div>
+    <img src="assets/icons/menu-burger.svg" (click)="toggleMenu()" alt="menu-burger">
+  </div>
+
+  <div class="loader-container" *ngIf="loading$ | async">
+    <div class="loader-box">
+      <img src="/assets/icons/loader.svg" alt="Loading..." class="loader-svg">
+    </div>
+  </div>
+
+  <div class="dashboard-content" *ngIf="!(loading$ | async)">
+
+    <div class="task-list">
+      <div class="task-item" *ngFor="let task of tasks$ | async">
+        <div class="task-item-content">
+          <div class="task-row top-row">
+            <div class="task-field task-id-field">
+              <span class="task-label">Task ID</span>
+              <span class="task-value">{{task.taskId}}</span>
+            </div>
+            <div class="task-status" [ngClass]="getStatusClass(task.status)">
+              <img [src]="getStatusIcon(task.status)" alt="Status icon" class="status-icon">
+              <span class="status-text">{{task.status}}</span>
+            </div>
+          </div>
+          <div class="task-row">
+            <div class="task-field task-answer-field">
+              <span class="task-label">Answer</span>
+              <span class="task-value">{{task.answer}}</span>
+            </div>
+          </div>
+          <div class="task-row">
+            <div class="task-field task-retries-field">
+              <span class="task-label">Retries</span>
+              <span class="task-value">{{task.retries}}</span>
+            </div>
+          </div>
+          <div *ngIf="task.errorMessage" class="task-row error-row">
+             <div class="task-field task-error-field">
+                <span class="task-label">Error</span>
+                <span class="task-value error-message">{{task.errorMessage}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <button class="refresh-button" (click)="refreshTasks()">
+      <img src="assets/icons/refresh-blue.svg" alt="Refresh">
+      Refresh Table
+    </button>
+  </div>
+</div> 

@@ -1,0 +1,261 @@
+service: task-processing-backend
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  httpApi:
+    cors: true
+  environment:
+    TASKS_TABLE_NAME: ${self:custom.tasksTableName}
+    TASK_QUEUE_URL: { Ref: TaskQueue }
+    TASK_DLQ_URL: { Ref: TaskDLQ }
+    STEP_FUNCTIONS_ARN: { Ref: TaskProcessingStateMachine }
+    WEBSOCKET_API_ENDPOINT:
+      Fn::Sub: 'wss://${WebsocketsApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}'
+    MANAGEMENT_API_ENDPOINT:
+      Fn::Sub: 'https://${WebsocketsApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}'
+    CONNECTIONS_TABLE_NAME: ${self:custom.connectionsTableName}
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: [dynamodb:Query, dynamodb:Scan, dynamodb:GetItem, dynamodb:PutItem, dynamodb:UpdateItem, dynamodb:DeleteItem]
+          Resource:
+            - Fn::GetAtt: [TasksTable, Arn]
+        - Effect: Allow
+          Action: [dynamodb:Query, dynamodb:Scan, dynamodb:GetItem, dynamodb:PutItem, dynamodb:UpdateItem, dynamodb:DeleteItem]
+          Resource:
+            - Fn::GetAtt: [ConnectionsTable, Arn]
+        - Effect: Allow
+          Action: [sqs:SendMessage, sqs:ReceiveMessage, sqs:DeleteMessage, sqs:GetQueueAttributes]
+          Resource:
+            - Fn::GetAtt: [TaskQueue, Arn]
+            - Fn::GetAtt: [TaskDLQ, Arn]
+        - Effect: Allow
+          Action: [states:StartExecution]
+          Resource:
+            - Ref: TaskProcessingStateMachine
+        - Effect: Allow
+          Action: [execute-api:ManageConnections]
+          Resource:
+            - Fn::Sub: 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${WebsocketsApi}/*'
+        - Effect: Allow
+          Action: [dynamodb:GetRecords, dynamodb:GetShardIterator, dynamodb:DescribeStream, dynamodb:ListStreams]
+          Resource:
+             Fn::GetAtt: [TasksTable, StreamArn]
+
+custom:
+  tasksTableName: ${sls:stage}-tasks-table
+  connectionsTableName: ${sls:stage}-websocket-connections
+  processTaskLambdaArn: arn:aws:lambda:${aws:region}:${aws:accountId}:function:${self:service}-${sls:stage}-processTaskLambda
+  handleFailureLambdaArn: arn:aws:lambda:${aws:region}:${aws:accountId}:function:${self:service}-${sls:stage}-handleFailureLambda
+
+functions:
+  submitTaskLambda:
+    handler: src/handlers/submitTask.handler
+    events:
+      - httpApi:
+          path: /tasks
+          method: post
+
+  getTasksLambda:
+    handler: src/handlers/getTasks.handler
+    events:
+      - httpApi:
+          path: /tasks
+          method: get
+
+  startStateMachineLambda:
+    handler: src/handlers/startStateMachine.handler
+    events:
+      - sqs:
+          arn: { Fn::GetAtt: [TaskQueue, Arn] }
+          batchSize: 1
+
+  processTaskLambda:
+    handler: src/handlers/processTask.handler
+
+  dlqMonitorLambda:
+    handler: src/handlers/dlqMonitor.handler
+    events:
+      - sqs:
+          arn: { Fn::GetAtt: [TaskDLQ, Arn] }
+          batchSize: 1
+
+  connectLambda:
+    handler: src/handlers/websocketConnect.handler
+    events:
+      - websocket:
+          route: $connect
+
+  disconnectLambda:
+    handler: src/handlers/websocketDisconnect.handler
+    events:
+      - websocket:
+          route: $disconnect
+
+  defaultHandlerLambda:
+    handler: src/handlers/websocketDefault.handler
+    events:
+      - websocket:
+          route: $default
+
+  notifyClientsLambda:
+    handler: src/handlers/notifyClients.handler
+    events:
+      - stream:
+          type: dynamodb
+          arn: { Fn::GetAtt: [TasksTable, StreamArn] }
+          batchSize: 1
+          startingPosition: LATEST
+
+  handleFailureLambda:
+    handler: src/handlers/handleFailure.handler
+
+resources:
+  Resources:
+    TasksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tasksTableName}
+        AttributeDefinitions:
+          - AttributeName: taskId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: taskId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE
+
+    ConnectionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.connectionsTableName}
+        AttributeDefinitions:
+          - AttributeName: connectionId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: connectionId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    TaskQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${sls:stage}-TaskQueue
+        RedrivePolicy:
+          deadLetterTargetArn: { Fn::GetAtt: [TaskDLQ, Arn] }
+          maxReceiveCount: 3
+
+    TaskDLQ:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${sls:stage}-TaskDLQ
+
+    TaskProcessingStateMachine:
+      Type: AWS::StepFunctions::StateMachine
+      Properties:
+        StateMachineName: ${sls:stage}-TaskProcessingStateMachine
+        DefinitionString:
+          Fn::Sub:
+            - |
+              {
+                "Comment": "Task Processing State Machine",
+                "StartAt": "ProcessTask",
+                "States": {
+                  "ProcessTask": {
+                    "Type": "Task",
+                    "Resource": "${ProcessTaskLambdaArn}",
+                    "Parameters": {
+                      "TaskInput.$": "$",
+                      "RetryCount.$": "$$.State.RetryCount"
+                    },
+                    "Retry": [
+                      {
+                        "ErrorEquals": ["States.ALL"],
+                        "IntervalSeconds": 3,
+                        "MaxAttempts": 2,
+                        "BackoffRate": 2.0
+                      }
+                    ],
+                    "Catch": [
+                      {
+                        "ErrorEquals": ["States.ALL"],
+                        "ResultPath": "$.errorInfo",
+                        "Next": "HandleFailureState"
+                      }
+                    ],
+                    "End": true
+                  },
+                  "HandleFailureState": {
+                      "Type": "Task",
+                      "Resource": "${HandleFailureLambdaArn}",
+                      "ResultPath": "$.handleFailureOutput",
+                      "Next": "SendFailureToDLQ"
+                  },
+                  "SendFailureToDLQ": {
+                      "Type": "Task",
+                      "Resource": "arn:aws:states:::sqs:sendMessage",
+                      "Parameters": {
+                          "QueueUrl": "${TaskDLQUrl}",
+                          "MessageBody.$": "$.handleFailureOutput"
+                      },
+                      "End": true
+                  }
+                }
+              }
+            - ProcessTaskLambdaArn: ${self:custom.processTaskLambdaArn}
+              HandleFailureLambdaArn: ${self:custom.handleFailureLambdaArn}
+              TaskDLQUrl: { Ref: TaskDLQ }
+
+        RoleArn: { Fn::GetAtt: [StateMachineExecutionRole, Arn] }
+
+    StateMachineExecutionRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: states.${aws:region}.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: StepFunctionsExecutionPolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action: lambda:InvokeFunction
+                  Resource:
+                    - "${self:custom.processTaskLambdaArn}"
+                    - "${self:custom.handleFailureLambdaArn}"
+                - Effect: Allow
+                  Action: sqs:SendMessage
+                  Resource: { Fn::GetAtt: [TaskDLQ, Arn] }
+
+    TaskProcessingApiGatewayIntegrationRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: apigateway.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: ApiGatewayInvokeLambdaPolicy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action: lambda:InvokeFunction
+                  Resource:
+                    - Fn::Sub: 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${self:service}-${sls:stage}-connectLambda'
+                    - Fn::Sub: 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${self:service}-${sls:stage}-disconnectLambda'
+                    - Fn::Sub: 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${self:service}-${sls:stage}-defaultHandlerLambda'

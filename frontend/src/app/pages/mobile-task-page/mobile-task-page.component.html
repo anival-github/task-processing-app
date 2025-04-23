@@ -1,0 +1,48 @@
+
+  <div class="task-container">
+    <app-menu [isOpen]="isMenuOpen" (closeMenu)="closeMenu()"></app-menu>
+    <div class="header">
+      <div class="logo-section">
+        <app-logo-container></app-logo-container>
+        <div class="divider"></div>
+        <span class="title">Read aloud | Q1/3</span>
+      </div>
+      <img src="assets/icons/menu-burger.svg" (click)="toggleMenu()" alt="menu-burger">
+    </div>
+  
+    <div class="question-card">
+      <div class="question-content">
+        <h2 class="question-label">Question:</h2>
+        <p class="question-text">
+          Lorem ipsum dolor sit amet consectetur. Et sagittis morbi accumsan ultricies eu rhoncus. 
+          Ultrices rhoncus massa duis non id neque?
+        </p>
+      </div>
+    </div>
+  
+    <div class="answer-card">
+      <div class="answer-content">
+        <h2 class="answer-label">Answer:</h2>
+
+        <div class="text-field-container">
+          <textarea 
+            class="text-area" 
+            placeholder="Enter your answer" 
+            [(ngModel)]="answer"
+            (input)="onAnswerChange($event)" 
+            maxlength="200"
+            name="taskAnswerTextArea">
+          </textarea>
+          <div class="word-count">{{wordCount}}/{{maxWords}}</div>
+        </div>
+      </div>
+    </div>
+  
+    
+  </div> 
+  <div class="footer">
+    <button mat-raised-button color="primary" class="submit-button" (click)="onSubmit()">
+      Submit
+    </button>
+  </div>
+  

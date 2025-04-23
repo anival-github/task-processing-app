@@ -1,0 +1,40 @@
+<div class="loader-container" *ngIf="loading$ | async">
+  <img src="/assets/icons/loader.svg" alt="Loading..." class="loader-svg">
+</div>
+
+<div class="dashboard-container" *ngIf="!(loading$ | async)">
+  <table class="task-table">
+    <thead>
+      <tr>
+        <th>Task ID</th>
+        <th>Answer</th>
+        <th>Status</th>
+        <th>Retries</th>
+        <th>
+          Error message
+          <button class="refresh-button" (click)="refreshTasks()">
+            <img src="assets/icons/refresh.svg" alt="Refresh" />
+            Refresh table
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let task of tasks$ | async">
+        <td>{{ task.taskId | slice:0:8 }}...</td> <!-- Shorten ID for display -->
+        <td class="answer-cell">{{ task.answer }}</td>
+        <td>
+          <span class="badge" [ngClass]="getStatusClass(task.status)">
+            <img [src]="getStatusIcon(task.status)" alt="" />
+            {{ task.status }}
+          </span>
+        </td>
+        <td>{{ task.retries }}</td>
+        <td>{{ task.errorMessage || '-' }}</td>
+      </tr>
+      <tr *ngIf="(tasks$ | async)?.length === 0 && !(loading$ | async)">
+        <td colspan="5" style="text-align: center; padding: 20px;">No tasks submitted yet.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

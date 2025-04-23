@@ -1,67 +1,83 @@
 # Test App
 
-A full-stack application with Angular frontend and Node.js backend.
+A full-stack application with Angular frontend and Node.js backend, designed as a fault-tolerant, event-driven system for processing tasks.
 
 ## Project Structure
 
-- `/frontend` - Angular application
-- `/backend` - Node.js backend (to be implemented)
+- `/frontend` - Angular 15 application with NGXS, implementing the user interface.
+- `/backend` - Node.js Serverless Framework application (AWS Lambda, API Gateway, SQS, Step Functions, DynamoDB), handling task processing and persistence.
 
-## Frontend
+## Architecture Overview
 
-The frontend is built with Angular and includes:
-- Task submission component with word counter
-- Dashboard with status tracking
-- Material Design components
-- NGXS state management
+See [docs/architecture.md](docs/architecture.md) for details on the system architecture.
 
-### Running the Frontend
+## Prerequisites
 
-```bash
-cd frontend
-npm install
-ng serve
-```
+- Node.js (v18 or higher recommended)
+- npm (v8 or higher recommended)
+- Angular CLI (v15) (`npm install -g @angular/cli@15`)
+- AWS Account and configured credentials (for backend deployment)
+- Serverless Framework (v3) (`npm install -g serverless@3`)
 
-The application will be available at `http://localhost:4200`.
+## Setup and Running
 
-## Backend
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/anival-github/test-app.git
+    cd test-app
+    ```
 
-The backend will be implemented using Node.js (implementation pending).
+2.  **Backend Setup:**
+    - Navigate to the backend directory:
+      ```bash
+      cd backend
+      ```
+    - Install dependencies:
+      ```bash
+      npm install
+      ```
+    - Deploy the service to AWS:
+      ```bash
+      serverless deploy
+      ```
+      *Note: Take note of the API Gateway endpoint URL (`apiUrl`) and WebSocket URL (`wsUrl`) provided after deployment.* 
 
-## Development
+    - If needed - navigate back to the root directory:
+      ```bash
+      cd .. 
+      ```
 
-### Prerequisites
+3.  **Frontend Setup & Configuration:**
+    - Navigate to the frontend directory:
+      ```bash
+      cd frontend
+      ```
+    - Install dependencies:
+      ```bash
+      npm install
+      ```
+    - Configure the backend endpoints in `frontend/src/environments/environment.ts` using the URLs from the backend deployment:
+      - Set `apiUrl` 
+      - Set `wsUrl`
+    
+4.  **Run the Frontend:**
+    - While in the `/frontend` directory:
+      ```bash
+      ng serve
+      ```
+    - The application will be available at `http://localhost:4200`.
 
-- Node.js (v14 or higher)
-- npm (v6 or higher)
-- Angular CLI (`npm install -g @angular/cli`)
+## Testing
 
-### Installation
+You will be able to interact with the frontend application to check all its features. 
 
-1. Clone the repository:
-```bash
-git clone https://github.com/anival-github/test-app.git
-cd test-app
-```
+In order to test mobile view, you need to open developer tools in the browser, and set the device you want to test, or manually adjust the screen size. 
 
-2. Install frontend dependencies:
-```bash
-cd frontend
-npm install
-```
+## Assumptions and Challenges
 
-3. Start the frontend development server:
-```bash
-ng serve
-```
+### Assumptions
+    - User opens the page on a particular device. That is why the screen size is captured once when the page is opened. 
 
-## Contributing
-
-1. Create a new branch for your feature
-2. Make your changes
-3. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License. 
+### Challenges
+    - There is a space to improve reusability for the frontend components, which would require additional effort. 
+ 

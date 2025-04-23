@@ -1,0 +1,9 @@
+.logo-container {
+    display: flex;
+    align-items: center;
+  
+    .logo-part {
+      max-height: 20px;
+      width: auto;
+    }
+  }
