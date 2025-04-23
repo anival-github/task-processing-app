@@ -4,9 +4,12 @@ import { MenuComponent } from '../menu/menu.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { TaskDashboardComponent } from '../task-dashboard/task-dashboard.component';
-import { Task } from '../../models/task.model';
-import { Observable, of } from 'rxjs';
+import { Task, TaskStatus } from '../../models/task.model';
+import { Observable } from 'rxjs';
 import { LogoContainerComponent } from '../logo-container/logo-container.component';
+import { Select, Store } from '@ngxs/store';
+import { TasksState } from '../../store/tasks/tasks.state';
+import { FetchTasks } from '../../store/tasks/tasks.actions';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -25,13 +28,10 @@ import { LogoContainerComponent } from '../logo-container/logo-container.compone
 export class DashboardPageComponent implements OnInit {
   isMenuOpen: boolean = false;
   
-  tasks$: Observable<Task[]> = of([
-    { taskId: '1', answer: 'Sample Answer 1', status: 'Processed', retries: 0 },
-    { taskId: '2', answer: 'Sample Answer 2', status: 'Failed', retries: 3, errorMessage: 'Something went wrong' },
-    { taskId: '3', answer: 'Sample Answer 3', status: 'Pending', retries: 1 }
-  ]);
+  @Select(TasksState.getTasks) tasks$!: Observable<Task[]>;
+  @Select(TasksState.isLoading) loading$!: Observable<boolean>;
 
-  constructor() { }
+  constructor(private store: Store) { }
 
   ngOnInit() {
     this.isMenuOpen = false;
@@ -45,7 +45,7 @@ export class DashboardPageComponent implements OnInit {
     this.isMenuOpen = false;
   }
 
-  getStatusClass(status: string): string {
+  getStatusClass(status: TaskStatus): string {
     switch (status) {
       case 'Processed':
         return 'status-processed';
@@ -58,14 +58,14 @@ export class DashboardPageComponent implements OnInit {
     }
   }
 
-  getStatusIcon(status: string): string {
+  getStatusIcon(status: TaskStatus): string {
     switch (status) {
       case 'Processed':
-        return 'assets/icons/processed.svg';
+        return 'assets/icons/check-circle.svg';
       case 'Failed':
-        return 'assets/icons/failed.svg';
+        return 'assets/icons/close-circle.svg';
       case 'Pending':
-        return 'assets/icons/pending.svg';
+        return 'assets/icons/clock.svg';
       default:
         return '';
     }
@@ -73,9 +73,6 @@ export class DashboardPageComponent implements OnInit {
 
   refreshTasks(): void {
     console.log('Refreshing tasks...');
-    this.tasks$ = of([
-      { taskId: '4', answer: 'Refreshed Answer 4', status: 'Processed', retries: 0 },
-      { taskId: '5', answer: 'Refreshed Answer 5', status: 'Pending', retries: 2 },
-    ]);
+    this.store.dispatch(new FetchTasks());
   }
 } 

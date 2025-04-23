@@ -7,6 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MenuComponent } from '../menu/menu.component';
 import { HeaderComponent } from '../header/header.component';
 import { LogoContainerComponent } from '../logo-container/logo-container.component';
+import { Store } from '@ngxs/store';
+import { AddTask } from '../../store/tasks/tasks.actions';
 
 @Component({
   selector: 'app-task-page',
@@ -30,6 +32,8 @@ export class TaskPageComponent implements OnInit {
   maxWords: number = 200;
   isMenuOpen: boolean = false;
 
+  constructor(private store: Store) {}
+
   ngOnInit() {
     this.isMenuOpen = false;
   }
@@ -40,8 +44,11 @@ export class TaskPageComponent implements OnInit {
   }
 
   onSubmit() {
-    // Handle form submission
-    console.log('Submitted answer:', this.answer);
+    if (this.answer && this.answer.trim().length > 0) {
+      this.store.dispatch(new AddTask({ answer: this.answer.trim() }));
+      this.answer = '';
+      this.wordCount = 0;
+    }
   }
 
   toggleMenu() {
