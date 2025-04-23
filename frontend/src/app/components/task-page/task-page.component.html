@@ -23,16 +23,18 @@
     <div class="answer-card">
       <div class="answer-content">
         <h2 class="answer-label">Answer:</h2>
-        <mat-form-field appearance="outline" class="answer-input">
-          <textarea
-            matInput
+
+        <div class="text-field-container">
+          <textarea 
+            class="text-area" 
+            placeholder="Enter your answer" 
             [(ngModel)]="answer"
-            (input)="onAnswerChange($event)"
-            placeholder="Enter your answer"
-            rows="4"
-          ></textarea>
-        </mat-form-field>
-        <div class="word-count">{{wordCount}}/{{maxWords}}</div>
+            (input)="onAnswerChange($event)" 
+            maxlength="200"
+            name="taskAnswerTextArea">
+          </textarea>
+          <div class="word-count">{{wordCount}}/{{maxWords}}</div>
+        </div>
       </div>
     </div>
   

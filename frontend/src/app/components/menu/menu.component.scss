@@ -83,14 +83,14 @@
     text-decoration: none;
     cursor: pointer;
 
-    mat-icon {
-      color: #5061D0;
+    .mat-icon {
       font-size: 24px;
       width: 24px;
       height: 24px;
 
-      &:last-child {
-        color: #6F7081;
+      path {
+        stroke: #6F7081;
+        transition: stroke 0.2s ease-in-out;
       }
     }
 
@@ -99,15 +99,28 @@
       font-size: 14px;
       line-height: 1.43;
       letter-spacing: 1.07%;
-      color: #5061D0;
-
-      &:last-child {
-        color: #292830;
-      }
+      color: #292830;
     }
 
     &.active {
       background-color: #F5F5F5;
+
+      .mat-icon path {
+        stroke: #5061D0;
+      }
+
+      span {
+        color: #5061D0;
+      }
+    }
+
+    &:hover:not(.active) {
+       .mat-icon path {
+          stroke: #292830;
+       }
+       span {
+          color: #5061D0;
+       }
     }
   }
 } 

@@ -1,6 +1,8 @@
 :host {
   display: block;
   /* margin-bottom: 20px; -> Handled by parent gap */
+  padding: 0 20px;
+  width: 100%;
 }
 
 .app-header {
