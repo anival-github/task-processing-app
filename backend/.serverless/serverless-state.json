@@ -422,7 +422,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-processing-backend/dev/1745347809395-2025-04-22T18:50:09.395Z/task-processing-backend.zip"
+                "S3Key": "serverless/task-processing-backend/dev/1745420940149-2025-04-23T15:09:00.149Z/task-processing-backend.zip"
               },
               "Handler": "src/handlers/submitTask.handler",
               "Runtime": "nodejs18.x",
@@ -468,7 +468,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-processing-backend/dev/1745347809395-2025-04-22T18:50:09.395Z/task-processing-backend.zip"
+                "S3Key": "serverless/task-processing-backend/dev/1745420940149-2025-04-23T15:09:00.149Z/task-processing-backend.zip"
               },
               "Handler": "src/handlers/getTasks.handler",
               "Runtime": "nodejs18.x",
@@ -514,7 +514,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-processing-backend/dev/1745347809395-2025-04-22T18:50:09.395Z/task-processing-backend.zip"
+                "S3Key": "serverless/task-processing-backend/dev/1745420940149-2025-04-23T15:09:00.149Z/task-processing-backend.zip"
               },
               "Handler": "src/handlers/startStateMachine.handler",
               "Runtime": "nodejs18.x",
@@ -560,7 +560,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-processing-backend/dev/1745347809395-2025-04-22T18:50:09.395Z/task-processing-backend.zip"
+                "S3Key": "serverless/task-processing-backend/dev/1745420940149-2025-04-23T15:09:00.149Z/task-processing-backend.zip"
               },
               "Handler": "src/handlers/processTask.handler",
               "Runtime": "nodejs18.x",
@@ -606,7 +606,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-processing-backend/dev/1745347809395-2025-04-22T18:50:09.395Z/task-processing-backend.zip"
+                "S3Key": "serverless/task-processing-backend/dev/1745420940149-2025-04-23T15:09:00.149Z/task-processing-backend.zip"
               },
               "Handler": "src/handlers/dlqMonitor.handler",
               "Runtime": "nodejs18.x",
@@ -652,7 +652,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-processing-backend/dev/1745347809395-2025-04-22T18:50:09.395Z/task-processing-backend.zip"
+                "S3Key": "serverless/task-processing-backend/dev/1745420940149-2025-04-23T15:09:00.149Z/task-processing-backend.zip"
               },
               "Handler": "src/handlers/websocketConnect.handler",
               "Runtime": "nodejs18.x",
@@ -698,7 +698,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-processing-backend/dev/1745347809395-2025-04-22T18:50:09.395Z/task-processing-backend.zip"
+                "S3Key": "serverless/task-processing-backend/dev/1745420940149-2025-04-23T15:09:00.149Z/task-processing-backend.zip"
               },
               "Handler": "src/handlers/websocketDisconnect.handler",
               "Runtime": "nodejs18.x",
@@ -744,7 +744,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-processing-backend/dev/1745347809395-2025-04-22T18:50:09.395Z/task-processing-backend.zip"
+                "S3Key": "serverless/task-processing-backend/dev/1745420940149-2025-04-23T15:09:00.149Z/task-processing-backend.zip"
               },
               "Handler": "src/handlers/websocketDefault.handler",
               "Runtime": "nodejs18.x",
@@ -790,7 +790,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-processing-backend/dev/1745347809395-2025-04-22T18:50:09.395Z/task-processing-backend.zip"
+                "S3Key": "serverless/task-processing-backend/dev/1745420940149-2025-04-23T15:09:00.149Z/task-processing-backend.zip"
               },
               "Handler": "src/handlers/notifyClients.handler",
               "Runtime": "nodejs18.x",
@@ -836,7 +836,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/task-processing-backend/dev/1745347809395-2025-04-22T18:50:09.395Z/task-processing-backend.zip"
+                "S3Key": "serverless/task-processing-backend/dev/1745420940149-2025-04-23T15:09:00.149Z/task-processing-backend.zip"
               },
               "Handler": "src/handlers/handleFailure.handler",
               "Runtime": "nodejs18.x",
@@ -875,104 +875,104 @@
               "HandleFailureLambdaLogGroup"
             ]
           },
-          "SubmitTaskLambdaLambdaVersiond7tTqSNMxwduwykLO7k8mMGllvTWR8P9Y3PgAuAxM": {
+          "SubmitTaskLambdaLambdaVersiont67dxcON6pJRKpeTiHYzrMiqcf316Fk1Q6tDMKgQ": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SubmitTaskLambdaLambdaFunction"
               },
-              "CodeSha256": "y0IFFmImZSwRJLXhesS8ptyFeIcL7iSn0HDi9q7a0Ps="
+              "CodeSha256": "TnFDBf8XffNsafFSNo/1DIxN+Nwg0j+JrqMZwV0soHE="
             }
           },
-          "GetTasksLambdaLambdaVersionjNr9CVMGjE50I0UBVoST5uPmAM5NgiFprRIl8PvVk": {
+          "GetTasksLambdaLambdaVersionUCtLTvezjC3driY6v67MDAbbUBFmbM7b1CvEsuRMkYM": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetTasksLambdaLambdaFunction"
               },
-              "CodeSha256": "y0IFFmImZSwRJLXhesS8ptyFeIcL7iSn0HDi9q7a0Ps="
+              "CodeSha256": "TnFDBf8XffNsafFSNo/1DIxN+Nwg0j+JrqMZwV0soHE="
             }
           },
-          "StartStateMachineLambdaLambdaVersiondDesDvLCp6Ub14SuzBfteUwhc5STRU6ufUMC8ZSVFo": {
+          "StartStateMachineLambdaLambdaVersionyLAtB9oSPORsQV5pAxVX4MLNyYsIV7aaSg9Ql7Hs0": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "StartStateMachineLambdaLambdaFunction"
               },
-              "CodeSha256": "y0IFFmImZSwRJLXhesS8ptyFeIcL7iSn0HDi9q7a0Ps="
+              "CodeSha256": "TnFDBf8XffNsafFSNo/1DIxN+Nwg0j+JrqMZwV0soHE="
             }
           },
-          "ProcessTaskLambdaLambdaVersiontHbDJPveLggWDw3gDQntLlnLpCcaxrdy4C2ib8gt7I": {
+          "ProcessTaskLambdaLambdaVersionokHiCD14TM2aHnnQnyFumkwVBs21hvZA6SBLQWLUOw": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ProcessTaskLambdaLambdaFunction"
               },
-              "CodeSha256": "y0IFFmImZSwRJLXhesS8ptyFeIcL7iSn0HDi9q7a0Ps="
+              "CodeSha256": "TnFDBf8XffNsafFSNo/1DIxN+Nwg0j+JrqMZwV0soHE="
             }
           },
-          "DlqMonitorLambdaLambdaVersionGNZQSaYlcVOrur08wS6jqWOr48odaBXnIvIMjjvKsJA": {
+          "DlqMonitorLambdaLambdaVersionte02fToyX7Bz0LHrD1c5tI5VeP8VQOfddm1csSjU": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DlqMonitorLambdaLambdaFunction"
               },
-              "CodeSha256": "y0IFFmImZSwRJLXhesS8ptyFeIcL7iSn0HDi9q7a0Ps="
+              "CodeSha256": "TnFDBf8XffNsafFSNo/1DIxN+Nwg0j+JrqMZwV0soHE="
             }
           },
-          "ConnectLambdaLambdaVersioncQqiTYWQMBdoNCG7CPTMJihSvG8VzGLswdRhjdPLTg": {
+          "ConnectLambdaLambdaVersionnprX9ZdDsOzwtK900ze0HVtupdbRqKOPLHBnaj1TY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ConnectLambdaLambdaFunction"
               },
-              "CodeSha256": "y0IFFmImZSwRJLXhesS8ptyFeIcL7iSn0HDi9q7a0Ps="
+              "CodeSha256": "TnFDBf8XffNsafFSNo/1DIxN+Nwg0j+JrqMZwV0soHE="
             }
           },
-          "DisconnectLambdaLambdaVersionRjd1pGH3pp14Z0z1CyJLhZ5n9lUIP2uifwQgA1chYk": {
+          "DisconnectLambdaLambdaVersionvAOv5iaF72R8dfgg0QwGsFPHhgBYGwoBzWa3BFpuuEU": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DisconnectLambdaLambdaFunction"
               },
-              "CodeSha256": "y0IFFmImZSwRJLXhesS8ptyFeIcL7iSn0HDi9q7a0Ps="
+              "CodeSha256": "TnFDBf8XffNsafFSNo/1DIxN+Nwg0j+JrqMZwV0soHE="
             }
           },
-          "DefaultHandlerLambdaLambdaVersion8IXqPICSi77hDrnPGI4NIzo5zgsihtGEJ3Bm0NVIXA": {
+          "DefaultHandlerLambdaLambdaVersionYqXAOcueT53oQgl7W5CEFGLIFzBrLTbRbLs5HfPnhzk": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DefaultHandlerLambdaLambdaFunction"
               },
-              "CodeSha256": "y0IFFmImZSwRJLXhesS8ptyFeIcL7iSn0HDi9q7a0Ps="
+              "CodeSha256": "TnFDBf8XffNsafFSNo/1DIxN+Nwg0j+JrqMZwV0soHE="
             }
           },
-          "NotifyClientsLambdaLambdaVersionVCY2rdzPuIxykkieBEQl7tOrg2ZGINtFy3tJhRiQ": {
+          "NotifyClientsLambdaLambdaVersionuzEwpTkkp453mRU6m9MEdSxSynVKVnW79WvwupIMs8": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "NotifyClientsLambdaLambdaFunction"
               },
-              "CodeSha256": "y0IFFmImZSwRJLXhesS8ptyFeIcL7iSn0HDi9q7a0Ps="
+              "CodeSha256": "TnFDBf8XffNsafFSNo/1DIxN+Nwg0j+JrqMZwV0soHE="
             }
           },
-          "HandleFailureLambdaLambdaVersionHuVl6aLkkMAbz0EJZuAQLqIUrol26yOSi4uuUHjmoQ": {
+          "HandleFailureLambdaLambdaVersionaS9coZAZoHDoL7YkLdm2cyM3nUATnTjVrvjFRshvXE": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "HandleFailureLambdaLambdaFunction"
               },
-              "CodeSha256": "y0IFFmImZSwRJLXhesS8ptyFeIcL7iSn0HDi9q7a0Ps="
+              "CodeSha256": "TnFDBf8XffNsafFSNo/1DIxN+Nwg0j+JrqMZwV0soHE="
             }
           },
           "WebsocketsApi": {
@@ -1539,7 +1539,7 @@
               "StateMachineName": "dev-TaskProcessingStateMachine",
               "DefinitionString": {
                 "Fn::Sub": [
-                  "{\n  \"Comment\": \"Task Processing State Machine\",\n  \"StartAt\": \"ProcessTask\",\n  \"States\": {\n    \"ProcessTask\": {\n      \"Type\": \"Task\",\n      \"Resource\": \"${ProcessTaskLambdaArn}\",\n      \"Parameters\": {\n        \"TaskInput.$\": \"$\",\n        \"RetryCount.$\": \"$$.State.RetryCount\"\n      },\n      \"Retry\": [\n        {\n          \"ErrorEquals\": [\"States.ALL\"],\n          \"IntervalSeconds\": 3,\n          \"MaxAttempts\": 2,\n          \"BackoffRate\": 2.0\n        }\n      ],\n      \"Catch\": [\n        {\n          \"ErrorEquals\": [\"States.ALL\"],\n          \"ResultPath\": \"$.errorInfo\",\n          \"Next\": \"HandleFailureState\"\n        }\n      ],\n      \"End\": true\n    },\n    \"HandleFailureState\": {\n        \"Type\": \"Task\",\n        \"Resource\": \"${HandleFailureLambdaArn}\",\n        \"ResultPath\": \"$.handleFailureOutput\",\n        \"Next\": \"SendFailureToDLQ\"\n    },\n    \"SendFailureToDLQ\": {\n        \"Type\": \"Task\",\n        \"Resource\": \"arn:aws:states:::sqs:sendMessage\",\n        \"Parameters\": {\n            \"QueueUrl\": \"${TaskDLQUrl}\", \n            \"MessageBody.$\": \"$.handleFailureOutput\"\n        },\n        \"End\": true\n    }\n  }\n}\n",
+                  "{\n  \"Comment\": \"Task Processing State Machine\",\n  \"StartAt\": \"ProcessTask\",\n  \"States\": {\n    \"ProcessTask\": {\n      \"Type\": \"Task\",\n      \"Resource\": \"${ProcessTaskLambdaArn}\",\n      \"Parameters\": {\n        \"TaskInput.$\": \"$\",\n        \"RetryCount.$\": \"$$.State.RetryCount\"\n      },\n      \"Retry\": [\n        {\n          \"ErrorEquals\": [\"States.ALL\"],\n          \"IntervalSeconds\": 3,\n          \"MaxAttempts\": 2,\n          \"BackoffRate\": 2.0\n        }\n      ],\n      \"Catch\": [\n        {\n          \"ErrorEquals\": [\"States.ALL\"],\n          \"ResultPath\": \"$.errorInfo\",\n          \"Next\": \"HandleFailureState\"\n        }\n      ],\n      \"End\": true\n    },\n    \"HandleFailureState\": {\n        \"Type\": \"Task\",\n        \"Resource\": \"${HandleFailureLambdaArn}\",\n        \"ResultPath\": \"$.handleFailureOutput\",\n        \"Next\": \"SendFailureToDLQ\"\n    },\n    \"SendFailureToDLQ\": {\n        \"Type\": \"Task\",\n        \"Resource\": \"arn:aws:states:::sqs:sendMessage\",\n        \"Parameters\": {\n            \"QueueUrl\": \"${TaskDLQUrl}\",\n            \"MessageBody.$\": \"$.handleFailureOutput\"\n        },\n        \"End\": true\n    }\n  }\n}\n",
                   {
                     "ProcessTaskLambdaArn": "arn:aws:lambda:us-east-1:445567083659:function:task-processing-backend-dev-processTaskLambda",
                     "HandleFailureLambdaArn": "arn:aws:lambda:us-east-1:445567083659:function:task-processing-backend-dev-handleFailureLambda",
@@ -1657,7 +1657,7 @@
           "SubmitTaskLambdaLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SubmitTaskLambdaLambdaVersiond7tTqSNMxwduwykLO7k8mMGllvTWR8P9Y3PgAuAxM"
+              "Ref": "SubmitTaskLambdaLambdaVersiont67dxcON6pJRKpeTiHYzrMiqcf316Fk1Q6tDMKgQ"
             },
             "Export": {
               "Name": "sls-task-processing-backend-dev-SubmitTaskLambdaLambdaFunctionQualifiedArn"
@@ -1666,7 +1666,7 @@
           "GetTasksLambdaLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetTasksLambdaLambdaVersionjNr9CVMGjE50I0UBVoST5uPmAM5NgiFprRIl8PvVk"
+              "Ref": "GetTasksLambdaLambdaVersionUCtLTvezjC3driY6v67MDAbbUBFmbM7b1CvEsuRMkYM"
             },
             "Export": {
               "Name": "sls-task-processing-backend-dev-GetTasksLambdaLambdaFunctionQualifiedArn"
@@ -1675,7 +1675,7 @@
           "StartStateMachineLambdaLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "StartStateMachineLambdaLambdaVersiondDesDvLCp6Ub14SuzBfteUwhc5STRU6ufUMC8ZSVFo"
+              "Ref": "StartStateMachineLambdaLambdaVersionyLAtB9oSPORsQV5pAxVX4MLNyYsIV7aaSg9Ql7Hs0"
             },
             "Export": {
               "Name": "sls-task-processing-backend-dev-StartStateMachineLambdaLambdaFunctionQualifiedArn"
@@ -1684,7 +1684,7 @@
           "ProcessTaskLambdaLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ProcessTaskLambdaLambdaVersiontHbDJPveLggWDw3gDQntLlnLpCcaxrdy4C2ib8gt7I"
+              "Ref": "ProcessTaskLambdaLambdaVersionokHiCD14TM2aHnnQnyFumkwVBs21hvZA6SBLQWLUOw"
             },
             "Export": {
               "Name": "sls-task-processing-backend-dev-ProcessTaskLambdaLambdaFunctionQualifiedArn"
@@ -1693,7 +1693,7 @@
           "DlqMonitorLambdaLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DlqMonitorLambdaLambdaVersionGNZQSaYlcVOrur08wS6jqWOr48odaBXnIvIMjjvKsJA"
+              "Ref": "DlqMonitorLambdaLambdaVersionte02fToyX7Bz0LHrD1c5tI5VeP8VQOfddm1csSjU"
             },
             "Export": {
               "Name": "sls-task-processing-backend-dev-DlqMonitorLambdaLambdaFunctionQualifiedArn"
@@ -1702,7 +1702,7 @@
           "ConnectLambdaLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ConnectLambdaLambdaVersioncQqiTYWQMBdoNCG7CPTMJihSvG8VzGLswdRhjdPLTg"
+              "Ref": "ConnectLambdaLambdaVersionnprX9ZdDsOzwtK900ze0HVtupdbRqKOPLHBnaj1TY"
             },
             "Export": {
               "Name": "sls-task-processing-backend-dev-ConnectLambdaLambdaFunctionQualifiedArn"
@@ -1711,7 +1711,7 @@
           "DisconnectLambdaLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DisconnectLambdaLambdaVersionRjd1pGH3pp14Z0z1CyJLhZ5n9lUIP2uifwQgA1chYk"
+              "Ref": "DisconnectLambdaLambdaVersionvAOv5iaF72R8dfgg0QwGsFPHhgBYGwoBzWa3BFpuuEU"
             },
             "Export": {
               "Name": "sls-task-processing-backend-dev-DisconnectLambdaLambdaFunctionQualifiedArn"
@@ -1720,7 +1720,7 @@
           "DefaultHandlerLambdaLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DefaultHandlerLambdaLambdaVersion8IXqPICSi77hDrnPGI4NIzo5zgsihtGEJ3Bm0NVIXA"
+              "Ref": "DefaultHandlerLambdaLambdaVersionYqXAOcueT53oQgl7W5CEFGLIFzBrLTbRbLs5HfPnhzk"
             },
             "Export": {
               "Name": "sls-task-processing-backend-dev-DefaultHandlerLambdaLambdaFunctionQualifiedArn"
@@ -1729,7 +1729,7 @@
           "NotifyClientsLambdaLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "NotifyClientsLambdaLambdaVersionVCY2rdzPuIxykkieBEQl7tOrg2ZGINtFy3tJhRiQ"
+              "Ref": "NotifyClientsLambdaLambdaVersionuzEwpTkkp453mRU6m9MEdSxSynVKVnW79WvwupIMs8"
             },
             "Export": {
               "Name": "sls-task-processing-backend-dev-NotifyClientsLambdaLambdaFunctionQualifiedArn"
@@ -1738,7 +1738,7 @@
           "HandleFailureLambdaLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "HandleFailureLambdaLambdaVersionHuVl6aLkkMAbz0EJZuAQLqIUrol26yOSi4uuUHjmoQ"
+              "Ref": "HandleFailureLambdaLambdaVersionaS9coZAZoHDoL7YkLdm2cyM3nUATnTjVrvjFRshvXE"
             },
             "Export": {
               "Name": "sls-task-processing-backend-dev-HandleFailureLambdaLambdaFunctionQualifiedArn"
@@ -1916,7 +1916,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "SubmitTaskLambdaLambdaVersiond7tTqSNMxwduwykLO7k8mMGllvTWR8P9Y3PgAuAxM"
+        "versionLogicalId": "SubmitTaskLambdaLambdaVersiont67dxcON6pJRKpeTiHYzrMiqcf316Fk1Q6tDMKgQ"
       },
       "getTasksLambda": {
         "handler": "src/handlers/getTasks.handler",
@@ -1936,7 +1936,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetTasksLambdaLambdaVersionjNr9CVMGjE50I0UBVoST5uPmAM5NgiFprRIl8PvVk"
+        "versionLogicalId": "GetTasksLambdaLambdaVersionUCtLTvezjC3driY6v67MDAbbUBFmbM7b1CvEsuRMkYM"
       },
       "startStateMachineLambda": {
         "handler": "src/handlers/startStateMachine.handler",
@@ -1956,7 +1956,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "StartStateMachineLambdaLambdaVersiondDesDvLCp6Ub14SuzBfteUwhc5STRU6ufUMC8ZSVFo"
+        "versionLogicalId": "StartStateMachineLambdaLambdaVersionyLAtB9oSPORsQV5pAxVX4MLNyYsIV7aaSg9Ql7Hs0"
       },
       "processTaskLambda": {
         "handler": "src/handlers/processTask.handler",
@@ -1967,7 +1967,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "ProcessTaskLambdaLambdaVersiontHbDJPveLggWDw3gDQntLlnLpCcaxrdy4C2ib8gt7I"
+        "versionLogicalId": "ProcessTaskLambdaLambdaVersionokHiCD14TM2aHnnQnyFumkwVBs21hvZA6SBLQWLUOw"
       },
       "dlqMonitorLambda": {
         "handler": "src/handlers/dlqMonitor.handler",
@@ -1987,7 +1987,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "DlqMonitorLambdaLambdaVersionGNZQSaYlcVOrur08wS6jqWOr48odaBXnIvIMjjvKsJA"
+        "versionLogicalId": "DlqMonitorLambdaLambdaVersionte02fToyX7Bz0LHrD1c5tI5VeP8VQOfddm1csSjU"
       },
       "connectLambda": {
         "handler": "src/handlers/websocketConnect.handler",
@@ -2004,7 +2004,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "ConnectLambdaLambdaVersioncQqiTYWQMBdoNCG7CPTMJihSvG8VzGLswdRhjdPLTg"
+        "versionLogicalId": "ConnectLambdaLambdaVersionnprX9ZdDsOzwtK900ze0HVtupdbRqKOPLHBnaj1TY"
       },
       "disconnectLambda": {
         "handler": "src/handlers/websocketDisconnect.handler",
@@ -2021,7 +2021,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "DisconnectLambdaLambdaVersionRjd1pGH3pp14Z0z1CyJLhZ5n9lUIP2uifwQgA1chYk"
+        "versionLogicalId": "DisconnectLambdaLambdaVersionvAOv5iaF72R8dfgg0QwGsFPHhgBYGwoBzWa3BFpuuEU"
       },
       "defaultHandlerLambda": {
         "handler": "src/handlers/websocketDefault.handler",
@@ -2038,7 +2038,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "DefaultHandlerLambdaLambdaVersion8IXqPICSi77hDrnPGI4NIzo5zgsihtGEJ3Bm0NVIXA"
+        "versionLogicalId": "DefaultHandlerLambdaLambdaVersionYqXAOcueT53oQgl7W5CEFGLIFzBrLTbRbLs5HfPnhzk"
       },
       "notifyClientsLambda": {
         "handler": "src/handlers/notifyClients.handler",
@@ -2060,7 +2060,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "NotifyClientsLambdaLambdaVersionVCY2rdzPuIxykkieBEQl7tOrg2ZGINtFy3tJhRiQ"
+        "versionLogicalId": "NotifyClientsLambdaLambdaVersionuzEwpTkkp453mRU6m9MEdSxSynVKVnW79WvwupIMs8"
       },
       "handleFailureLambda": {
         "handler": "src/handlers/handleFailure.handler",
@@ -2071,7 +2071,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "HandleFailureLambdaLambdaVersionHuVl6aLkkMAbz0EJZuAQLqIUrol26yOSi4uuUHjmoQ"
+        "versionLogicalId": "HandleFailureLambdaLambdaVersionaS9coZAZoHDoL7YkLdm2cyM3nUATnTjVrvjFRshvXE"
       }
     },
     "resources": {
@@ -2144,7 +2144,7 @@
             "StateMachineName": "dev-TaskProcessingStateMachine",
             "DefinitionString": {
               "Fn::Sub": [
-                "{\n  \"Comment\": \"Task Processing State Machine\",\n  \"StartAt\": \"ProcessTask\",\n  \"States\": {\n    \"ProcessTask\": {\n      \"Type\": \"Task\",\n      \"Resource\": \"${ProcessTaskLambdaArn}\",\n      \"Parameters\": {\n        \"TaskInput.$\": \"$\",\n        \"RetryCount.$\": \"$$.State.RetryCount\"\n      },\n      \"Retry\": [\n        {\n          \"ErrorEquals\": [\"States.ALL\"],\n          \"IntervalSeconds\": 3,\n          \"MaxAttempts\": 2,\n          \"BackoffRate\": 2.0\n        }\n      ],\n      \"Catch\": [\n        {\n          \"ErrorEquals\": [\"States.ALL\"],\n          \"ResultPath\": \"$.errorInfo\",\n          \"Next\": \"HandleFailureState\"\n        }\n      ],\n      \"End\": true\n    },\n    \"HandleFailureState\": {\n        \"Type\": \"Task\",\n        \"Resource\": \"${HandleFailureLambdaArn}\",\n        \"ResultPath\": \"$.handleFailureOutput\",\n        \"Next\": \"SendFailureToDLQ\"\n    },\n    \"SendFailureToDLQ\": {\n        \"Type\": \"Task\",\n        \"Resource\": \"arn:aws:states:::sqs:sendMessage\",\n        \"Parameters\": {\n            \"QueueUrl\": \"${TaskDLQUrl}\", \n            \"MessageBody.$\": \"$.handleFailureOutput\"\n        },\n        \"End\": true\n    }\n  }\n}\n",
+                "{\n  \"Comment\": \"Task Processing State Machine\",\n  \"StartAt\": \"ProcessTask\",\n  \"States\": {\n    \"ProcessTask\": {\n      \"Type\": \"Task\",\n      \"Resource\": \"${ProcessTaskLambdaArn}\",\n      \"Parameters\": {\n        \"TaskInput.$\": \"$\",\n        \"RetryCount.$\": \"$$.State.RetryCount\"\n      },\n      \"Retry\": [\n        {\n          \"ErrorEquals\": [\"States.ALL\"],\n          \"IntervalSeconds\": 3,\n          \"MaxAttempts\": 2,\n          \"BackoffRate\": 2.0\n        }\n      ],\n      \"Catch\": [\n        {\n          \"ErrorEquals\": [\"States.ALL\"],\n          \"ResultPath\": \"$.errorInfo\",\n          \"Next\": \"HandleFailureState\"\n        }\n      ],\n      \"End\": true\n    },\n    \"HandleFailureState\": {\n        \"Type\": \"Task\",\n        \"Resource\": \"${HandleFailureLambdaArn}\",\n        \"ResultPath\": \"$.handleFailureOutput\",\n        \"Next\": \"SendFailureToDLQ\"\n    },\n    \"SendFailureToDLQ\": {\n        \"Type\": \"Task\",\n        \"Resource\": \"arn:aws:states:::sqs:sendMessage\",\n        \"Parameters\": {\n            \"QueueUrl\": \"${TaskDLQUrl}\",\n            \"MessageBody.$\": \"$.handleFailureOutput\"\n        },\n        \"End\": true\n    }\n  }\n}\n",
                 {
                   "ProcessTaskLambdaArn": "arn:aws:lambda:us-east-1:445567083659:function:task-processing-backend-dev-processTaskLambda",
                   "HandleFailureLambdaArn": "arn:aws:lambda:us-east-1:445567083659:function:task-processing-backend-dev-handleFailureLambda",
@@ -2275,7 +2275,7 @@
     "artifact": "O:\\test-app\\backend\\.serverless\\task-processing-backend.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/task-processing-backend/dev/1745347809395-2025-04-22T18:50:09.395Z",
+    "artifactDirectoryName": "serverless/task-processing-backend/dev/1745420940149-2025-04-23T15:09:00.149Z",
     "artifact": "task-processing-backend.zip"
   }
 }
