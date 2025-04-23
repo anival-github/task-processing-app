@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { TaskFormComponent } from './components/task-form/task-form.component';
 import { TaskDashboardComponent } from './components/task-dashboard/task-dashboard.component';
+import { HomeComponent } from './components/home/home.component';
 import { environment } from '../environments/environment';
 import { TasksState } from './store/tasks/tasks.state';
 
@@ -19,7 +20,8 @@ import { TasksState } from './store/tasks/tasks.state';
     AppComponent,
     HeaderComponent,
     TaskFormComponent,
-    TaskDashboardComponent
+    TaskDashboardComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
