@@ -1,4 +1,4 @@
-# Test App
+# Task Processing App
 
 A full-stack application with Angular frontend and Node.js backend, designed as a fault-tolerant, event-driven system for processing tasks.
 
